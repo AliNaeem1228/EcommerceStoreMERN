@@ -67,7 +67,6 @@ const UserShema = new Schema(
   }
 );
 
-//compile the schema to model
 const User = mongoose.model("User", UserShema);
 
 export default User;

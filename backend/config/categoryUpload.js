@@ -3,7 +3,6 @@ import cloudinaryPackage from "cloudinary";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
-//configure cloudinary
 const cloudinary = cloudinaryPackage.v2;
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,7 +10,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET_KEY,
 });
 
-// Create storage engine for Multer
 const storage = new CloudinaryStorage({
   cloudinary,
   allowedFormats: ["jpg", "png"],
@@ -20,7 +18,6 @@ const storage = new CloudinaryStorage({
   },
 });
 
-// Init Multer with the storage engine
 const catetgoryFileUpload = multer({ storage: storage });
 
 export default catetgoryFileUpload;

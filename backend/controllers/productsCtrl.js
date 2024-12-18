@@ -3,9 +3,6 @@ import Brand from "../model/Brand.js";
 import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 
-// @desc    Create new product
-// @route   POST /api/v1/products
-// @access  Private/Admin
 export const createProductCtrl = asyncHandler(async (req, res) => {
   console.log(req.body);
   const { name, description, category, sizes, colors, price, totalQty, brand } =
@@ -18,7 +15,7 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
   }
   //find the brand
   const brandFound = await Brand.findOne({
-    name: "addidas",
+    name: brand,
   });
 
   if (!brandFound) {
@@ -63,10 +60,6 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
     product,
   });
 });
-
-// @desc    Get all products
-// @route   GET /api/v1/products
-// @access  Public
 
 export const getProductsCtrl = asyncHandler(async (req, res) => {
   console.log(req.query);
@@ -157,10 +150,6 @@ export const getProductsCtrl = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Get single product
-// @route   GET /api/products/:id
-// @access  Public
-
 export const getProductCtrl = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id).populate({
     path: "reviews",
@@ -178,10 +167,6 @@ export const getProductCtrl = asyncHandler(async (req, res) => {
     product,
   });
 });
-
-// @desc    update  product
-// @route   PUT /api/products/:id/update
-// @access  Private/Admin
 
 export const updateProductCtrl = asyncHandler(async (req, res) => {
   const {
@@ -223,9 +208,6 @@ export const updateProductCtrl = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    delete  product
-// @route   DELETE /api/products/:id/delete
-// @access  Private/Admin
 export const deleteProductCtrl = asyncHandler(async (req, res) => {
   await Product.findByIdAndDelete(req.params.id);
   res.json({

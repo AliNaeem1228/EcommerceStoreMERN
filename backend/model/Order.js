@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-//Generate random numbers for order
+
 const randomTxt = Math.random().toString(36).substring(7).toLocaleUpperCase();
 const randomNumbers = Math.floor(1000 + Math.random() * 90000);
 const OrderSchema = new Schema(
@@ -56,7 +56,6 @@ const OrderSchema = new Schema(
   }
 );
 
-//compile to form model
 const Order = mongoose.model("Order", OrderSchema);
 
 export default Order;

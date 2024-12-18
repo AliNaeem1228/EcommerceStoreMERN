@@ -2,10 +2,6 @@ import asyncHandler from "express-async-handler";
 import Product from "../model/Product.js";
 import Review from "../model/Review.js";
 
-// @desc    Create new review
-// @route   POST /api/v1/reviews
-// @access  Private/Admin
-
 export const createReviewCtrl = asyncHandler(async (req, res) => {
   const { product, message, rating } = req.body;
   //1. Find the product

@@ -14,7 +14,7 @@ import Coupon from "../model/Coupon.js";
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 export const createOrderCtrl = asyncHandler(async (req, res) => {
-  // //get teh coupon
+  // //get the coupon
   // const { coupon } = req?.query;
 
   // const couponFound = await Coupon.findOne({

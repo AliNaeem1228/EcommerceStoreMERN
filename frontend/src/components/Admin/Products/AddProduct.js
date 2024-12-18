@@ -86,12 +86,7 @@ export default function AddProduct() {
   });
 
   //---form data---
-  const [formData, setFormData] = useState({
-    name: "",
-    address: "",
-    district: "",
-    phone: "",
-  });
+  const [formData, setFormData] = useState({});
 
   //onChange
   const handleOnChange = (e) => {

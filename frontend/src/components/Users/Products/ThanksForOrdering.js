@@ -15,6 +15,10 @@ const products = [
   // More products...
 ];
 
+const clearCart = () => {
+  localStorage.clearItem();
+};
+
 export default function ThanksForOrdering() {
   return (
     <>
@@ -44,7 +48,8 @@ export default function ThanksForOrdering() {
               <div className="mt-16 border-t border-gray-200 py-6 text-right">
                 <Link
                   to="/"
-                  className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                >
                   Continue Shopping
                   <span aria-hidden="true"> &rarr;</span>
                 </Link>
