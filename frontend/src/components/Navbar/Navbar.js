@@ -8,7 +8,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import baseURL from "../../utils/baseURL";
-import logo from "./shopLogo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategoriesAction } from "../../redux/slices/categories/categoriesSlice";
 import { getCartItemsFromLocalStorageAction } from "../../redux/slices/cart/cartSlices";
@@ -239,7 +238,7 @@ export default function Navbar() {
                       <span className="sr-only">Your Company</span>
                       <img
                         className="h-20 w-auto"
-                        src={logo}
+                        src="/images/shopLogo.png"
                         alt="i-novotek logo"
                       />
                     </Link>
@@ -306,7 +305,7 @@ export default function Navbar() {
                   <Link to="/" className="lg:hidden">
                     <img
                       className="h-32 mt-2 w-auto"
-                      src={logo}
+                      src="/images/shopLogo.png"
                       alt="i-novotek logo"
                     />
                   </Link>

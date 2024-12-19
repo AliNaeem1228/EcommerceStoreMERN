@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../Navbar/shopLogo.png";
+import logo from "";
 
 export default function NotAuthorised() {
   return (

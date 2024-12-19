@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import logo from "../Navbar/shopLogo.png";
 
 export default function AdminOnly() {
   return (
@@ -8,7 +7,11 @@ export default function AdminOnly() {
         <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-6 lg:px-8">
           <div className="flex flex-shrink-0 justify-center">
             <a href="/" className="inline-flex">
-              <img className="h-12 w-auto" src={logo} alt="i-novotek logo" />
+              <img
+                className="h-12 w-auto"
+                src="/images/shopLogo.png"
+                alt="i-novotek logo"
+              />
             </a>
           </div>
           <div className="py-16">

@@ -4,7 +4,7 @@ export default function ShippingAddressDetails({ shippingAddress }) {
       <div className="h-56 sm:h-72 md:absolute md:left-0 md:h-full md:w-1/2">
         <img
           className="h-full w-full object-cover"
-          src="https://images.pexels.com/photos/6348105/pexels-photo-6348105.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          src="/images/shipping.jpg"
           alt=""
         />
       </div>

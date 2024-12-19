@@ -15,7 +15,7 @@ import {
   UserGroupIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import logo from "../Navbar/shopLogo.png";
+
 const ordersLinks = [
   {
     name: "Dashboard",

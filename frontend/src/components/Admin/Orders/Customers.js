@@ -38,33 +38,39 @@ export default function Customers() {
               <tr>
                 <th
                   scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                >
                   Full Name
                 </th>
                 <th
                   scope="col"
-                  className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
+                  className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+                >
                   Email
                 </th>
                 <th
                   scope="col"
-                  className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
+                  className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                >
                   Country
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
                   City
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
                   Phone
                 </th>
 
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
                   Postal Code
                 </th>
                 {/* <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -74,9 +80,9 @@ export default function Customers() {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               {uniqueCustomers?.map((customer) => (
-                <tr key={customer.user.fullname}>
+                <tr key={customer.user.name}>
                   <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                    {customer.user.fullname}
+                    {customer.user.name}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                     {customer.user.email}

@@ -8,9 +8,10 @@ const Login = () => {
   //dispatch
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    email: "admin@gmail.com",
-    password: "12345",
+    email: "", // Initialize email with an empty string
+    password: "", // Initialize password with an empty string
   });
+
   //---Destructuring---
   const { email, password } = formData;
   //---onchange handler----
@@ -66,6 +67,9 @@ const Login = () => {
                         onChange={onChangeHandler}
                         className="p-5 w-full border border-gray-200 focus:ring-blue-300 focus:border-blue-300 rounded-md"
                         type="email"
+                        placeholder="enter email here"
+                        autoComplete="off"
+                        required
                       />
                     </label>
                   </div>
@@ -80,6 +84,9 @@ const Login = () => {
                         onChange={onChangeHandler}
                         className="p-5 w-full border border-gray-200 focus:ring-blue-300 focus:border-blue-300 rounded-md"
                         type="password"
+                        placeholder="enter password here"
+                        autoComplete="off"
+                        required
                       />
                     </label>
                   </div>

@@ -9,12 +9,12 @@ const RegisterForm = () => {
   const dispatch = useDispatch();
   //dispatch
   const [formData, setFormData] = useState({
-    fullname: "",
+    name: "",
     email: "",
     password: "",
   });
   //---Destructuring---
-  const { fullname, email, password } = formData;
+  const { name, email, password } = formData;
   //---onchange handler----
   const onChangeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,7 +23,7 @@ const RegisterForm = () => {
   //---onsubmit handler----
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    dispatch(registerUserAction({ fullname, email, password }));
+    dispatch(registerUserAction({ name, email, password }));
   };
   //select store data
   const { user, error, loading } = useSelector((state) => state?.users);
@@ -48,12 +48,14 @@ const RegisterForm = () => {
                 <p className="mb-10">Please, do not hesitate</p>
                 <form onSubmit={onSubmitHandler}>
                   <input
-                    name="fullname"
-                    value={fullname}
+                    name="name"
+                    value={name}
                     onChange={onChangeHandler}
                     className="w-full mb-4 px-12 py-6 border border-gray-200 focus:ring-blue-300 focus:border-blue-300 rounded-md"
                     type="text"
-                    placeholder="Full Name"
+                    placeholder="Enter your Name"
+                    autoComplete="off"
+                    required
                   />
                   <input
                     name="email"
@@ -62,6 +64,8 @@ const RegisterForm = () => {
                     className="w-full mb-4 px-12 py-6 border border-gray-200 focus:ring-blue-300 focus:border-blue-300 rounded-md"
                     type="email"
                     placeholder="Enter your email"
+                    autoComplete="off"
+                    required
                   />
                   <input
                     name="password"
@@ -70,7 +74,12 @@ const RegisterForm = () => {
                     className="w-full mb-4 px-12 py-6 border border-gray-200 focus:ring-blue-300 focus:border-blue-300 rounded-md"
                     type="password"
                     placeholder="Enter your password"
+                    required
+                    pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$"
+                    title="Password must be at least 8 characters long, contain at least one uppercase letter, and one special character (!@#$%^&*)."
+                    autoComplete="off"
                   />
+
                   {loading ? (
                     <LoadingComponent />
                   ) : (
