@@ -6,7 +6,7 @@ import { getTokenFromHeader } from "../utils/getTokenFromHeader.js";
 import { verifyToken } from "../utils/verifyToken.js";
 
 export const registerUserCtrl = asyncHandler(async (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { name, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
   if (userExists) {
@@ -17,7 +17,7 @@ export const registerUserCtrl = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const user = await User.create({
-    fullname,
+    name,
     email,
     password: hashedPassword,
   });

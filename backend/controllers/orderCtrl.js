@@ -88,6 +88,9 @@ export const createOrderCtrl = asyncHandler(async (req, res) => {
     metadata: {
       orderId: JSON.stringify(order?._id),
     },
+    shipping_options: [
+      { shipping_rate: "shr_1QRbGPGC2bldVM1SLQfEyg3e" }, // Replace with your Shipping Rate ID
+    ],
     mode: "payment",
     success_url: "http://localhost:3000/success",
     cancel_url: "http://localhost:3000/cancel",

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../Navbar/logo3.png";
+import logo from "../Navbar/shopLogo.png";
 
 export default function NotAuthorised() {
   return (
@@ -23,7 +23,8 @@ export default function NotAuthorised() {
               <div className="mt-6">
                 <Link
                   to="/login"
-                  className="text-base font-medium text-indigo-600 hover:text-indigo-500">
+                  className="text-base font-medium text-indigo-600 hover:text-indigo-500"
+                >
                   Login
                   <span aria-hidden="true"> &rarr;</span>
                 </Link>
@@ -35,7 +36,8 @@ export default function NotAuthorised() {
           <nav className="flex justify-center space-x-4">
             <Link
               to="/"
-              className="text-sm font-medium text-gray-500 hover:text-gray-600">
+              className="text-sm font-medium text-gray-500 hover:text-gray-600"
+            >
               Go Home
             </Link>
           </nav>

@@ -155,7 +155,7 @@ export const getProductCtrl = asyncHandler(async (req, res) => {
     path: "reviews",
     populate: {
       path: "user",
-      select: "fullname",
+      select: "name",
     },
   });
   if (!product) {

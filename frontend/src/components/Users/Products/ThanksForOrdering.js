@@ -1,4 +1,7 @@
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { clearCart } from "../../../redux/slices/cart/cartSlices";
+import ConfettiEffect from "../../SuccessMsg/Confetti";
 
 const products = [
   {
@@ -15,19 +18,18 @@ const products = [
   // More products...
 ];
 
-const clearCart = () => {
-  localStorage.clearItem();
-};
-
 export default function ThanksForOrdering() {
+  const dispatch = useDispatch();
+  dispatch(clearCart());
   return (
     <>
+      <ConfettiEffect />
       <main className="relative lg:min-h-full">
-        <div className="h-80 overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
+        <div className="overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
           <img
-            src="https://tailwindui.com/img/ecommerce-images/confirmation-page-06-hero.jpg"
-            alt="TODO"
-            className="h-full w-full object-cover object-center"
+            src="/images/ThankYou.jpg"
+            alt="Thank You"
+            className="h-auto object-cover object-center"
           />
         </div>
 

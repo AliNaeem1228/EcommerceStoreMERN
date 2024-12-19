@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../Navbar/logo3.png";
+import logo from "../Navbar/shopLogo.png";
 
 export default function AdminOnly() {
   return (
@@ -21,7 +21,8 @@ export default function AdminOnly() {
               <div className="mt-6">
                 <Link
                   to="/login"
-                  className="text-base font-medium text-indigo-600 hover:text-indigo-500">
+                  className="text-base font-medium text-indigo-600 hover:text-indigo-500"
+                >
                   Go Home
                   <span aria-hidden="true"> &rarr;</span>
                 </Link>

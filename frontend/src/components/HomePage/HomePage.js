@@ -108,9 +108,9 @@ export default function Example() {
             </div>
             <div className="h-48 w-full sm:h-64 lg:absolute lg:top-0 lg:right-0 lg:h-full lg:w-1/2">
               <img
-                src="https://tailwindui.com/img/ecommerce-images/home-page-02-hero-half-width.jpg"
-                alt=""
-                className="h-full w-full object-cover object-center"
+                src="/images/homePhoto.jpeg"
+                alt="HomePhoto"
+                class="object-cover h-full w-full"
               />
             </div>
           </div>
