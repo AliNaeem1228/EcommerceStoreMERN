@@ -23,7 +23,7 @@ export default function CustomerProfile() {
           <CustomerDetails
             email={profile?.user?.email}
             dateJoined={new Date(profile?.user?.createdAt).toDateString()}
-            fullName={profile?.user?.name}
+            name={profile?.user?.name}
           />
         </div>
         <div className="w-full md:w-1/3 px-3 mb-3 md:mb-0" />
