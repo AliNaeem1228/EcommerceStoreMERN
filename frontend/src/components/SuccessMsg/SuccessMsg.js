@@ -10,9 +10,9 @@ const SuccessMsg = ({ message }) => {
         text: message,
       });
     }
-  }, [message]); // Run this effect only when `message` changes
+  }, [message]);
 
-  return null; // This component does not render anything visually
+  return null;
 };
 
 export default SuccessMsg;
