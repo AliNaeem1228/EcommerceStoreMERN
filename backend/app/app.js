@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import cors from "cors";
+import morgan from "morgan";
 import Stripe from "stripe";
 dotenv.config();
 import express from "express";
@@ -85,9 +86,11 @@ app.post(
 app.use(express.json());
 //url encoded
 app.use(express.urlencoded({ extended: true }));
-
 //server static files
 app.use(express.static("public"));
+//morgan
+app.use(morgan("tiny"));
+
 //routes
 //Home route
 app.get("/", (req, res) => {

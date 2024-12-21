@@ -102,7 +102,7 @@ export default function OrdersStats() {
               </svg>
             </div>
             <p className="ml-16 truncate text-sm font-medium text-gray-200">
-              Maximum Oder
+              Maximum Orders
             </p>
           </dt>
           <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
