@@ -10,6 +10,8 @@ import {
 const initialState = {
   loading: false,
   error: null,
+  success: false,
+  isVerified: null,
   users: [],
   user: null,
   profile: {},
@@ -151,6 +153,43 @@ export const logoutAction = createAsyncThunk(
   }
 );
 
+//Send OTP
+export const sendOtpAction = createAsyncThunk(
+  "users/send-otp",
+  async (_id, { rejectWithValue }) => {
+    try {
+      // Replace with your API endpoint
+      const { data } = await axios.post(`${baseURL}/users/send-otp`, {
+        user: _id,
+      });
+      return data; // Success payload
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to send OTP"
+      );
+    }
+  }
+);
+
+//Verify OTP
+export const verifyOtpAction = createAsyncThunk(
+  "users/verify-otp",
+  async ({ _id, otp }, { rejectWithValue }) => {
+    try {
+      // Replace with your API endpoint
+      const { data } = await axios.post(`${baseURL}/users/verify-otp`, {
+        userId: _id,
+        otp,
+      });
+      return data; // Success payload
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to verify OTP"
+      );
+    }
+  }
+);
+
 //users slice
 
 const usersSlice = createSlice({
@@ -222,6 +261,39 @@ const usersSlice = createSlice({
     //reset error action
     builder.addCase(resetErrAction.pending, (state) => {
       state.error = null;
+    });
+    //send OTP
+    builder.addCase(sendOtpAction.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(sendOtpAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.error = null;
+    });
+    builder.addCase(sendOtpAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    //verify OTP
+    builder.addCase(verifyOtpAction.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(verifyOtpAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isVerified = action.payload.isVerified; // Backend should return `isVerified`
+      state.success = true;
+      state.error = null;
+    });
+    builder.addCase(verifyOtpAction.rejected, (state, action) => {
+      state.loading = false;
+      state.isVerified = null;
+      state.success = false;
+      state.error = action.payload;
     });
   },
 });

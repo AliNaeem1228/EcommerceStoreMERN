@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -15,6 +16,7 @@ import { logoutAction } from "../../redux/slices/users/usersSlice";
 import { fetchCouponsAction } from "../../redux/slices/coupons/couponsSlice";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
@@ -41,6 +43,7 @@ export default function Navbar() {
   //logout handler
   const logoutHandler = () => {
     dispatch(logoutAction());
+    navigate("/");
     //reload
     window.location.reload();
   };

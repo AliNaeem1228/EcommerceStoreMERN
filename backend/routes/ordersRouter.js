@@ -1,4 +1,4 @@
-import exppress from "express";
+import express from "express";
 import {
   createOrderCtrl,
   getAllordersCtrl,
@@ -8,7 +8,7 @@ import {
 } from "../controllers/orderCtrl.js";
 import { isLoggedIn } from "../middlewares/isLoggedIn.js";
 
-const orderRouter = exppress.Router();
+const orderRouter = express.Router();
 
 orderRouter.post("/", isLoggedIn, createOrderCtrl);
 orderRouter.get("/", isLoggedIn, getAllordersCtrl);
