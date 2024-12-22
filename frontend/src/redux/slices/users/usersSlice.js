@@ -158,7 +158,6 @@ export const sendOtpAction = createAsyncThunk(
   "users/send-otp",
   async (_id, { rejectWithValue }) => {
     try {
-      // Replace with your API endpoint
       const { data } = await axios.post(`${baseURL}/users/send-otp`, {
         user: _id,
       });
@@ -176,7 +175,6 @@ export const verifyOtpAction = createAsyncThunk(
   "users/verify-otp",
   async ({ _id, otp }, { rejectWithValue }) => {
     try {
-      // Replace with your API endpoint
       const { data } = await axios.post(`${baseURL}/users/verify-otp`, {
         userId: _id,
         otp,
@@ -278,6 +276,7 @@ const usersSlice = createSlice({
       state.success = false;
       state.error = action.payload;
     });
+
     //verify OTP
     builder.addCase(verifyOtpAction.pending, (state, action) => {
       state.loading = true;
@@ -285,7 +284,7 @@ const usersSlice = createSlice({
     });
     builder.addCase(verifyOtpAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.isVerified = action.payload.isVerified; // Backend should return `isVerified`
+      state.isVerified = action.payload.isVerified; // Ensure backend returns this field
       state.success = true;
       state.error = null;
     });

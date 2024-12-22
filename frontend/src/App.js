@@ -36,6 +36,8 @@ import ProductUpdate from "./components/Admin/Products/ProuductUpdate";
 import UpdateOrders from "./components/Admin/Orders/UpdateOrders";
 import ColorsList from "./components/Admin/Categories/ColorsList";
 import { useDispatch, useSelector } from "react-redux";
+import SendOtp from "./components/Users/Forms/Otp";
+import VerifyOtp from "./components/Users/Forms/verifyOtp";
 
 const App = () => {
   return (
@@ -199,6 +201,8 @@ const App = () => {
         {/* users */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
+        <Route path="/send-otp" element={<SendOtp />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route
           path="/customer-profile"
           element={
