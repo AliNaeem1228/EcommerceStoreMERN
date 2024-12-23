@@ -3,7 +3,7 @@ import Wishlist from "../model/Wishlist.js";
 
 // Create a wishlist item
 export const createWishlistCtrl = asyncHandler(async (req, res) => {
-  const { user, product, note } = req.body;
+  const { user, product } = req.body;
 
   // Check if the wishlist item already exists
   const wishlistExists = await Wishlist.findOne({ user, product });
@@ -12,7 +12,7 @@ export const createWishlistCtrl = asyncHandler(async (req, res) => {
   }
 
   // Create and save the wishlist item
-  const createdWishlist = await Wishlist.create({ user, product, note });
+  const createdWishlist = await Wishlist.create({ user, product });
 
   // Populate the response with product details
   const populatedWishlist = await createdWishlist.populate({

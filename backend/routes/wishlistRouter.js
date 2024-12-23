@@ -8,7 +8,7 @@ import { isLoggedIn } from "../middlewares/isLoggedIn.js";
 
 const wishlistRouter = express.Router();
 
-wishlistRouter.post("/", isLoggedIn, createWishlistCtrl);
-wishlistRouter.get("/:id", isLoggedIn, getWishlishCtrl);
-wishlistRouter.delete("/:id/delete", isLoggedIn, deleteWishlistCtrl);
+wishlistRouter.post("/", createWishlistCtrl);
+wishlistRouter.get("/:id", getWishlishCtrl);
+wishlistRouter.delete("/:id/delete", deleteWishlistCtrl);
 export default wishlistRouter;

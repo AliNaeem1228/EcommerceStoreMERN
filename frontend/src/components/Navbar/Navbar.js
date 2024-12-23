@@ -15,6 +15,7 @@ import { fetchCategoriesAction } from "../../redux/slices/categories/categoriesS
 import { getCartItemsFromLocalStorageAction } from "../../redux/slices/cart/cartSlices";
 import { logoutAction } from "../../redux/slices/users/usersSlice";
 import { fetchCouponsAction } from "../../redux/slices/coupons/couponsSlice";
+import { getWishlistAction } from "../../redux/slices/wishlist/wishlistSlice";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -58,7 +59,21 @@ export default function Navbar() {
   const currentCoupon = coupons
     ? coupons?.coupons?.[coupons?.coupons?.length - 1]
     : console.log(currentCoupon);
+  //wishlist
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userInfo?._id;
 
+    if (userId) {
+      dispatch(getWishlistAction({ userId })); // Fetch wishlist items on component mount
+    }
+  }, [dispatch]);
+
+  // Access wishlist data from Redux store
+  const { wishlist } = useSelector((state) => state.wishlist);
+
+  // Wishlist count
+  const wishlistCount = wishlist?.length || 0;
   return (
     <div className="bg-white">
       {/* Mobile menu */}
@@ -376,10 +391,10 @@ export default function Navbar() {
                           </span>
                         </Link>
                       </div>
-                      {/*wishlist*/}
+                      {/* Wishlist Icon */}
                       <div className="flow-root">
                         <Link
-                          to="/shopping-cart"
+                          to="/wishlist"
                           className="group -m-2 flex items-center p-2"
                         >
                           <HeartIcon
@@ -387,7 +402,7 @@ export default function Navbar() {
                             aria-hidden="true"
                           />
                           <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                            {cartItems?.length > 0 ? cartItems?.length : 0}
+                            {wishlistCount}
                           </span>
                         </Link>
                       </div>

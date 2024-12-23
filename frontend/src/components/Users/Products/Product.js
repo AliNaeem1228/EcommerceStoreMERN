@@ -14,6 +14,8 @@ import {
   addOrderToCartaction,
   getCartItemsFromLocalStorageAction,
 } from "../../../redux/slices/cart/cartSlices";
+import { createWishlistAction } from "../../../redux/slices/wishlist/wishlistSlice";
+
 const product = {
   name: "Basic Tee",
   price: "$35",
@@ -338,18 +340,54 @@ export default function Product() {
                 <button
                   style={{ cursor: "not-allowed" }}
                   disabled
-                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 py-3 px-8 text-base font-medium text-whitefocus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 py-3 px-8 text-base font-medium text-white"
                 >
                   Add to Wishlist
                 </button>
               ) : (
                 <button
-                  onClick={() => addToCartHandler()}
-                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 py-3 px-8 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => {
+                    const userInfo = JSON.parse(
+                      localStorage.getItem("userInfo")
+                    );
+                    const userId = userInfo?._id;
+
+                    if (!userId) {
+                      Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "You need to log in to add items to your wishlist.",
+                      });
+                      return;
+                    }
+
+                    dispatch(
+                      createWishlistAction({ userId, productId: product?._id })
+                    )
+                      .unwrap()
+                      .then(() => {
+                        Swal.fire({
+                          icon: "success",
+                          title: "Success",
+                          text: "Product added to wishlist successfully.",
+                        });
+                      })
+                      .catch((error) => {
+                        Swal.fire({
+                          icon: "error",
+                          title: "Error",
+                          text:
+                            error ||
+                            "Failed to add the product to your wishlist.",
+                        });
+                      });
+                  }}
+                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 py-3 px-8 text-base font-medium text-white hover:bg-red-700"
                 >
                   Add to Wishlist
                 </button>
               )}
+
               {/* proceed to check */}
 
               {cartItems.length > 0 && (

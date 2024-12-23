@@ -47,6 +47,7 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
         userFound,
         token: generateToken(userFound?._id),
         verified: userFound.isVerified,
+        _id: userFound._id,
       });
     }
   } else {

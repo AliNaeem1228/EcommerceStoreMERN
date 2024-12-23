@@ -1,24 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  createWishlistAction,
   getWishlistAction,
   deleteWishlistAction,
 } from "../../../redux/slices/wishlist/wishlistSlice";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
+import Swal from "sweetalert2";
 
 export default function Wishlist() {
   const dispatch = useDispatch();
 
-  // Local state to handle adding items
-  const [newProduct, setNewProduct] = useState("");
-
   // Fetch wishlist items on component mount
   useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("userInfo"))?._id; // Replace with your auth logic
-    dispatch(getWishlistAction(userId));
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userInfo?._id;
+
+    if (userId) {
+      dispatch(getWishlistAction({ userId }));
+    }
   }, [dispatch]);
 
   // Access wishlist data from Redux store
@@ -26,27 +27,25 @@ export default function Wishlist() {
 
   // Remove wishlist item handler
   const removeWishlistItemHandler = (wishlistId) => {
-    dispatch(deleteWishlistAction(wishlistId));
-  };
-
-  // Add item to wishlist handler
-  const addWishlistItemHandler = (e) => {
-    e.preventDefault();
-    const userId = JSON.parse(localStorage.getItem("userInfo"))?._id; // Replace with your auth logic
-
-    if (!userId || !newProduct) {
-      alert("Please provide valid product details.");
-      return;
-    }
-
-    dispatch(
-      createWishlistAction({
-        user: userId,
-        product: newProduct,
-        note: "Added from wishlist page", // Optional note
-      })
-    );
-    setNewProduct(""); // Clear input field
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to remove this item from your wishlist?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, remove it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteWishlistAction(wishlistId))
+          .unwrap()
+          .then(() => {
+            Swal.fire("Removed!", "The item has been removed.", "success");
+          })
+          .catch((err) => {
+            Swal.fire("Error!", err || "Failed to remove the item.", "error");
+          });
+      }
+    });
   };
 
   return (
@@ -55,6 +54,7 @@ export default function Wishlist() {
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
           Wishlist
         </h1>
+
         {loading ? (
           <LoadingComponent />
         ) : error ? (
@@ -69,19 +69,18 @@ export default function Wishlist() {
               <li key={item._id} className="flex py-6">
                 <div className="flex-shrink-0">
                   <img
-                    src={item.product.image} // Assuming product has an `image` field
-                    alt={item.product.name}
+                    src={item.product?.images || "/placeholder-image.jpg"} // Placeholder for missing images
+                    alt={item.product?.name || "No name"}
                     className="h-24 w-24 rounded-md object-cover object-center"
                   />
                 </div>
                 <div className="ml-4 flex flex-1 justify-between">
                   <div>
                     <h3 className="text-sm font-medium text-gray-900">
-                      {item.product.name}
+                      {item.product?.name || "No name"}
                     </h3>
                     <p className="mt-1 text-sm text-gray-500">
-                      {item.product.description}{" "}
-                      {/* Optional product description */}
+                      {item.product?.description || "No description available"}
                     </p>
                   </div>
                   <div className="flex items-center">
@@ -97,24 +96,10 @@ export default function Wishlist() {
             ))}
           </ul>
         )}
+
         <div className="mt-6">
-          <form onSubmit={addWishlistItemHandler} className="mb-4">
-            <input
-              type="text"
-              value={newProduct}
-              onChange={(e) => setNewProduct(e.target.value)}
-              placeholder="Enter Product ID to Add"
-              className="mr-2 rounded-md border p-2"
-            />
-            <button
-              type="submit"
-              className="text-white bg-indigo-600 px-4 py-2 rounded-md hover:bg-indigo-800"
-            >
-              Add to Wishlist
-            </button>
-          </form>
           <Link
-            to="/products"
+            to="/"
             className="text-indigo-600 hover:text-indigo-800 font-medium"
           >
             Continue Shopping
