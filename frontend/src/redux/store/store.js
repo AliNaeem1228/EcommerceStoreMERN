@@ -8,6 +8,7 @@ import ordersReducer from "../slices/orders/ordersSlices";
 import productReducer from "../slices/products/productSlices";
 import reviewsReducer from "../slices/reviews/reviewsSlice";
 import usersReducer from "../slices/users/usersSlice";
+import wishlistReducer from "../slices/wishlist/wishlistSlice";
 
 //store
 const store = configureStore({
@@ -21,6 +22,7 @@ const store = configureStore({
     coupons: couponsReducer,
     orders: ordersReducer,
     reviews: reviewsReducer,
+    wishlist: wishlistReducer,
   },
 });
 

@@ -1,3 +1,4 @@
+import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -20,7 +21,8 @@ const Products = ({ products }) => {
                     // state: {
                     //   product: product,
                     // },
-                  }}>
+                  }}
+                >
                   <img
                     className="w-full h-64 object-cover"
                     src={product?.images[0]}
@@ -39,26 +41,20 @@ const Products = ({ products }) => {
                       </span>
                     </p>
                   </a>
-                  <a
-                    className="ml-auto mr-2 flex items-center justify-center w-12 h-12 bg-blue-300 hover:bg-blue-400 rounded-md"
-                    href="#">
-                    <svg
-                      width={12}
-                      height={12}
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <rect x={5} width={2} height={12} fill="white" />
-                      <rect
-                        x={12}
-                        y={5}
-                        width={2}
-                        height={12}
-                        transform="rotate(90 12 5)"
-                        fill="white"
-                      />
-                    </svg>
-                  </a>
+                  <div className="flex flex-row justify-end gap-3">
+                    <a
+                      className="flex items-center justify-center w-12 h-12 bg-blue-300 hover:bg-blue-400 rounded-md text-white font-bold text-2xl"
+                      href="#"
+                    >
+                      <ShoppingCartIcon />
+                    </a>
+                    <a
+                      className="flex items-center justify-center w-12 h-12 bg-red-300 hover:bg-red-400 rounded-md text-white font-bold text-2xl"
+                      href="#"
+                    >
+                      <HeartIcon />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

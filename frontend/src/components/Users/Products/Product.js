@@ -333,6 +333,23 @@ export default function Product() {
                   Add to cart
                 </button>
               )}
+              {/* wishlist */}
+              {product?.qtyLeft <= 0 ? (
+                <button
+                  style={{ cursor: "not-allowed" }}
+                  disabled
+                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 py-3 px-8 text-base font-medium text-whitefocus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Add to Wishlist
+                </button>
+              ) : (
+                <button
+                  onClick={() => addToCartHandler()}
+                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 py-3 px-8 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Add to Wishlist
+                </button>
+              )}
               {/* proceed to check */}
 
               {cartItems.length > 0 && (

@@ -1,5 +1,6 @@
 import express from "express";
 import upload from "../config/fileUpload.js";
+
 import {
   createProductCtrl,
   getProductsCtrl,
@@ -19,7 +20,6 @@ productsRouter.post(
   upload.array("files"),
   createProductCtrl
 );
-
 productsRouter.get("/", getProductsCtrl);
 productsRouter.get("/:id", getProductCtrl);
 productsRouter.put("/:id", isLoggedIn, isAdmin, updateProductCtrl);
