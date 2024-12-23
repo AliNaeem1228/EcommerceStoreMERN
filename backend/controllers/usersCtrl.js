@@ -35,12 +35,20 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
     email,
   });
   if (userFound && (await bcrypt.compare(password, userFound?.password))) {
-    res.json({
-      status: "success",
-      message: "User logged in successfully",
-      userFound,
-      token: generateToken(userFound?._id),
-    });
+    if (!userFound.isVerified) {
+      res.json({
+        message: "User is not Verified",
+        verified: userFound.isVerified,
+      });
+    } else if (userFound.isVerified) {
+      res.json({
+        status: "success",
+        message: "User logged in successfully",
+        userFound,
+        token: generateToken(userFound?._id),
+        verified: userFound.isVerified,
+      });
+    }
   } else {
     throw new Error("Invalid login credentials");
   }

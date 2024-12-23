@@ -15,7 +15,7 @@ export const createWishlistAction = createAsyncThunk(
   "wishlist/create",
   async ({ userId, productId, note }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`${baseURL}/wishlist`, {
+      const { data } = await axios.post(`${baseURL}/users/verify-otp`, {
         user: userId,
         product: productId,
         note,

@@ -38,6 +38,7 @@ import ColorsList from "./components/Admin/Categories/ColorsList";
 import { useDispatch, useSelector } from "react-redux";
 import SendOtp from "./components/Users/Forms/Otp";
 import VerifyOtp from "./components/Users/Forms/verifyOtp";
+import Wishlist from "./components/Users/Products/Wishlist";
 
 const App = () => {
   return (
@@ -198,6 +199,16 @@ const App = () => {
             </AuthRoute>
           }
         />
+        {/* Wishlist */}
+        <Route
+          path="/wishlist"
+          element={
+            <AuthRoute>
+              <Wishlist />
+            </AuthRoute>
+          }
+        />
+
         {/* users */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />

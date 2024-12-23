@@ -16,6 +16,7 @@ import reviewRouter from "../routes/reviewRouter.js";
 import userRoutes from "../routes/usersRoute.js";
 import Order from "../model/Order.js";
 import couponsRouter from "../routes/couponsRouter.js";
+import wishlistRouter from "../routes/wishlistRouter.js";
 
 dbConnect();
 const app = express();
@@ -104,6 +105,7 @@ app.use("/api/v1/colors/", colorRouter);
 app.use("/api/v1/reviews/", reviewRouter);
 app.use("/api/v1/orders/", orderRouter);
 app.use("/api/v1/coupons/", couponsRouter);
+app.use("/api/v1/wishlist/", wishlistRouter);
 //err middleware
 app.use(notFound);
 app.use(globalErrhandler);
