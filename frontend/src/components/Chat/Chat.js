@@ -1,124 +1,110 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-const Chat = () => {
+const ChatComponent = () => {
   const [socket, setSocket] = useState(null);
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState("");
-  const [receiverId, setReceiverId] = useState("adminUserId"); // Replace with actual admin ID
+  const [nickname, setNickname] = useState("");
+  const [roomNumber, setRoomNumber] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
-    // Initialize Socket.IO connection
-    const newSocket = io("http://localhost:8000", {
-      auth: {
-        token: localStorage.getItem("token"), // Ensure the user is logged in and token is available
-      },
+    const newSocket = io("http://localhost:3000/chat", {
+      auth: { token: "123456" }, // Replace with a dynamic token if needed
     });
 
-    // Listen for events
-    newSocket.on("connect", () => {
-      console.log("Connected to server");
-      newSocket.emit("joinRoom", { receiverId }); // Join a room with admin
+    newSocket.on("chat message", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
     });
 
-    newSocket.on("receiveMessage", (message) => {
-      setMessages((prev) => [...prev, message]); // Add incoming messages to the list
+    newSocket.on("online", (users) => {
+      setOnlineUsers(users);
     });
 
-    newSocket.on("disconnect", () => {
-      console.log("Disconnected from server");
+    newSocket.on("typing", (data) => {
+      console.log(data); // Optional: Display typing notification
     });
 
     setSocket(newSocket);
+    return () => newSocket.disconnect();
+  }, []);
 
-    return () => {
-      newSocket.disconnect();
-    };
-  }, [receiverId]);
-
-  const sendMessage = () => {
-    if (inputMessage.trim()) {
-      const message = { receiverId, message: inputMessage };
-
-      // Emit message to the server
-      socket.emit("sendMessage", message);
-
-      // Optimistically add the message to the UI
-      setMessages((prev) => [
-        ...prev,
-        { senderId: "me", message: inputMessage, timestamp: new Date() },
-      ]);
-
-      setInputMessage("");
+  const handleLogin = () => {
+    if (nickname && roomNumber) {
+      socket.emit("login", { nickname, roomNumber });
+      setIsLoggedIn(true);
     }
   };
 
+  const sendMessage = () => {
+    if (message) {
+      const chatMessage = {
+        name: nickname,
+        roomNumber,
+        text: message,
+      };
+      socket.emit("chat message", chatMessage);
+      setMessage("");
+    }
+  };
+
+  const handleTyping = () => {
+    socket.emit("typing", { name: nickname, roomNumber });
+  };
+
   return (
-    <div style={{ maxWidth: "400px", margin: "auto", padding: "20px" }}>
-      <h3>Support Chat</h3>
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          borderRadius: "8px",
-          height: "300px",
-          overflowY: "auto",
-          marginBottom: "10px",
-        }}
-      >
-        {messages.map((msg, index) => (
+    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+      {!isLoggedIn ? (
+        <div>
+          <h2>Join Chat</h2>
+          <input
+            type="text"
+            placeholder="Enter your nickname"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
+          <br />
+          <input
+            type="text"
+            placeholder="Enter room number"
+            value={roomNumber}
+            onChange={(e) => setRoomNumber(e.target.value)}
+          />
+          <br />
+          <button onClick={handleLogin}>Join</button>
+        </div>
+      ) : (
+        <div>
+          <h2>Chat Room: {roomNumber}</h2>
+          <p>Online Users: {onlineUsers.map((user) => user.name).join(", ")}</p>
           <div
-            key={index}
             style={{
-              textAlign: msg.senderId === "me" ? "right" : "left",
-              margin: "5px 0",
+              border: "1px solid #ccc",
+              padding: "10px",
+              height: "300px",
+              overflowY: "scroll",
             }}
           >
-            <div
-              style={{
-                display: "inline-block",
-                padding: "8px",
-                borderRadius: "8px",
-                background: msg.senderId === "me" ? "#007bff" : "#f1f1f1",
-                color: msg.senderId === "me" ? "white" : "black",
-              }}
-            >
-              {msg.message}
-            </div>
-            <div style={{ fontSize: "10px", color: "#888" }}>
-              {new Date(msg.timestamp).toLocaleTimeString()}
-            </div>
+            {messages.map((msg, index) => (
+              <div key={index}>
+                <strong>{msg.name}:</strong> {msg.text} <em>{msg.date}</em>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <input
-        type="text"
-        value={inputMessage}
-        onChange={(e) => setInputMessage(e.target.value)}
-        placeholder="Type your message..."
-        style={{
-          width: "80%",
-          padding: "8px",
-          borderRadius: "4px",
-          border: "1px solid #ccc",
-        }}
-      />
-      <button
-        onClick={sendMessage}
-        style={{
-          width: "18%",
-          marginLeft: "2%",
-          padding: "8px",
-          borderRadius: "4px",
-          background: "#007bff",
-          color: "white",
-          border: "none",
-        }}
-      >
-        Send
-      </button>
+          <input
+            type="text"
+            placeholder="Type a message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleTyping}
+          />
+          <button onClick={sendMessage}>Send</button>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Chat;
+export default ChatComponent;
