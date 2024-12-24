@@ -68,32 +68,15 @@ app.post(
     } else {
       return;
     }
-    // // Handle the event
-    // switch (event.type) {
-    //   case "payment_intent.succeeded":
-    //     const paymentIntent = event.data.object;
-    //     // Then define and call a function to handle the event payment_intent.succeeded
-    //     break;
-    //   // ... handle other event types
-    //   default:
-    //     console.log(`Unhandled event type ${event.type}`);
-    // }
-    // Return a 200 response to acknowledge receipt of the event
     response.send();
   }
 );
 
-//pass incoming data
 app.use(express.json());
-//url encoded
 app.use(express.urlencoded({ extended: true }));
-//server static files
 app.use(express.static("public"));
-//morgan
 app.use(morgan("tiny"));
 
-//routes
-//Home route
 app.get("/", (req, res) => {
   res.sendFile(path.join("public", "index.html"));
 });
@@ -106,7 +89,7 @@ app.use("/api/v1/reviews/", reviewRouter);
 app.use("/api/v1/orders/", orderRouter);
 app.use("/api/v1/coupons/", couponsRouter);
 app.use("/api/v1/wishlist/", wishlistRouter);
-//err middleware
+
 app.use(notFound);
 app.use(globalErrhandler);
 

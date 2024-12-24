@@ -7,6 +7,7 @@ import {
   UserIcon,
   XMarkIcon,
   HeartIcon,
+  ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import baseURL from "../../utils/baseURL";
@@ -343,6 +344,15 @@ export default function Navbar() {
                       <div className="flex space-x-8">
                         {isLoggedIn && (
                           <div className="flex">
+                            <Link
+                              to="/support-chat"
+                              className="-m-2 p-2 mr-2 text-gray-400 hover:text-gray-500"
+                            >
+                              <ChatBubbleLeftEllipsisIcon
+                                className="h-6 w-6"
+                                aria-hidden="true"
+                              />
+                            </Link>
                             <Link
                               to="/customer-profile"
                               className="-m-2 p-2 mr-2 text-gray-400 hover:text-gray-500"

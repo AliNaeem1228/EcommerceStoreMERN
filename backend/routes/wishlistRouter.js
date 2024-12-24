@@ -4,7 +4,6 @@ import {
   getWishlishCtrl,
   deleteWishlistCtrl,
 } from "../controllers/wishlistCtrl.js";
-import { isLoggedIn } from "../middlewares/isLoggedIn.js";
 
 const wishlistRouter = express.Router();
 

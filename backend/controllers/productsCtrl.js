@@ -8,8 +8,9 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
   const { name, description, category, sizes, colors, price, totalQty, brand } =
     req.body;
   const convertedImgs = req.files.map((file) => file?.path);
-  //Product exists
+
   const productExists = await Product.findOne({ name });
+
   if (productExists) {
     throw new Error("Product Already Exists");
   }

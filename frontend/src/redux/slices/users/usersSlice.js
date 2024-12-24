@@ -149,6 +149,7 @@ export const logoutAction = createAsyncThunk(
   async (payload, { rejectWithValue, getState, dispatch }) => {
     //get token
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("cartItems");
     return true;
   }
 );
