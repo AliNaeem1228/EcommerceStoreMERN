@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUserAction } from "../../../redux/slices/users/usersSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   //dispatch
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "", // Initialize email with an empty string
@@ -20,9 +22,15 @@ const Login = () => {
   };
 
   //---onsubmit handler----
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    dispatch(loginUserAction({ email, password }));
+    const login = await dispatch(loginUserAction({ email, password }));
+    console.log("login data  ==", login?.payload?.verified);
+    if (!login?.payload?.verified) {
+      console.log("login?.payload?.user?._id == ", login?.payload?.user?._id)
+      navigate(`/send-otp/${login?.payload?.user?._id}`);
+    }
+
   };
 
   //get data from store

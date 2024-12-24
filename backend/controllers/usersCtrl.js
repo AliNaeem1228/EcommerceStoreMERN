@@ -39,6 +39,7 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
       res.json({
         message: "User is not Verified",
         verified: userFound.isVerified,
+        user: userFound
       });
     } else if (userFound.isVerified) {
       res.json({

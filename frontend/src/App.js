@@ -220,7 +220,7 @@ const App = () => {
         {/* users */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/send-otp" element={<SendOtp />} />
+        <Route path="/send-otp/:user_id" element={<SendOtp />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route
           path="/customer-profile"

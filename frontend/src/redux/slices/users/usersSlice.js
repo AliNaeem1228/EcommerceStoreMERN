@@ -133,9 +133,11 @@ export const loginUserAction = createAsyncThunk(
         email,
         password,
       });
+      console.log("login data redux  ==", data);
+
       //save the user into localstorage
       localStorage.setItem("userInfo", JSON.stringify(data));
-      return data;
+      return data
     } catch (error) {
       console.log(error);
       return rejectWithValue(error?.response?.data);
