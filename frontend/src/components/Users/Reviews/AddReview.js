@@ -7,22 +7,19 @@ import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 
 export default function AddReview() {
-  //Dispatch
   const dispatch = useDispatch();
-  //get params
   const { id } = useParams();
-  //---form data---
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     rating: "",
     message: "",
   });
 
-  //onChange
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //onSubmit
   const handleOnSubmit = (e) => {
     e.preventDefault();
     dispatch(
@@ -34,9 +31,8 @@ export default function AddReview() {
     );
   };
 
-  //get data from store
   const { loading, error, isAdded } = useSelector((state) => state?.reviews);
-  const navigate = useNavigate();
+
   return (
     <>
       {error && <ErrorMsg message={error?.message} />}
@@ -71,21 +67,14 @@ export default function AddReview() {
                   className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 border-2 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   defaultValue="Canada"
                 >
-                  {/* review rating */}
-
                   <option value="1">1</option>
-
                   <option value="2">2</option>
-
                   <option value="3">3</option>
-
                   <option value="4">4</option>
-
                   <option value="5">5 </option>
                 </select>
               </div>
 
-              {/* description */}
               <div>
                 <label
                   htmlFor="comment"
@@ -103,6 +92,7 @@ export default function AddReview() {
                   />
                 </div>
               </div>
+
               <div>
                 {loading ? (
                   <LoadingComponent />
@@ -119,7 +109,8 @@ export default function AddReview() {
               <div>
                 <button
                   type="button"
-                  className="flex w-full justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => navigate("/")}
+                  className="flex w-full justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
                   I have Changed my mind
                 </button>

@@ -1,6 +1,5 @@
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
 
-//initalsState
 const initialState = {
   cartItems: [],
   loading: false,

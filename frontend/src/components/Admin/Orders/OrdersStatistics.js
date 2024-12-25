@@ -3,20 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { OrdersStatsAction } from "../../../redux/slices/orders/ordersSlices";
 
 export default function OrdersStats() {
-  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(OrdersStatsAction());
   }, []);
-  //get data from store
-  const { stats, loading, error } = useSelector((state) => state?.orders);
+
+  const { stats } = useSelector((state) => state?.orders);
   const obj = stats?.orders;
   const statistics = obj && obj[0] ? Object.values(obj[0]) : [];
 
   return (
     <div>
       <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Today's sales */}
         <div className="relative overflow-hidden rounded-lg bg-indigo-600 px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
           <dt>
             <div className="absolute rounded-md bg-indigo-500 p-3">
@@ -49,7 +47,7 @@ export default function OrdersStats() {
             </div>
           </dd>
         </div>
-        {/* stat 1 */}
+
         <div className="relative overflow-hidden rounded-lg bg-red-800 px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
           <dt>
             <div className="absolute rounded-md bg-indigo-500 p-3">
@@ -82,7 +80,7 @@ export default function OrdersStats() {
             </div>
           </dd>
         </div>
-        {/* stat 2 */}
+
         <div className="relative overflow-hidden rounded-lg bg-yellow-600 px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
           <dt>
             <div className="absolute rounded-md bg-indigo-500 p-3">
@@ -115,7 +113,7 @@ export default function OrdersStats() {
             </div>
           </dd>
         </div>
-        {/* stat 3 */}
+
         <div className="relative overflow-hidden rounded-lg bg-green-600 px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
           <dt>
             <div className="absolute rounded-md bg-indigo-500 p-3">

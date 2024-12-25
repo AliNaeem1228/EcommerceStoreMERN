@@ -16,65 +16,6 @@ import {
 } from "../../../redux/slices/cart/cartSlices";
 import { createWishlistAction } from "../../../redux/slices/wishlist/wishlistSlice";
 
-const product = {
-  name: "Basic Tee",
-  price: "$35",
-  href: "#",
-  breadcrumbs: [
-    { id: 1, name: "Women", href: "#" },
-    { id: 2, name: "Clothing", href: "#" },
-  ],
-  images: [
-    {
-      id: 1,
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/product-page-01-featured-product-shot.jpg",
-      imageAlt: "Back of women's Basic Tee in black.",
-      primary: true,
-    },
-    {
-      id: 2,
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/product-page-01-product-shot-01.jpg",
-      imageAlt: "Side profile of women's Basic Tee in black.",
-      primary: false,
-    },
-    {
-      id: 3,
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/product-page-01-product-shot-02.jpg",
-      imageAlt: "Front of women's Basic Tee in black.",
-      primary: false,
-    },
-  ],
-  colors: [
-    { name: "Black", bgColor: "bg-gray-900", selectedColor: "ring-gray-900" },
-    {
-      name: "Heather Grey",
-      bgColor: "bg-gray-400",
-      selectedColor: "ring-gray-400",
-    },
-  ],
-  sizes: [
-    { name: "XXS", inStock: true },
-    { name: "XS", inStock: true },
-    { name: "S", inStock: true },
-    { name: "M", inStock: true },
-    { name: "L", inStock: true },
-    { name: "XL", inStock: false },
-  ],
-  description: `
-    <p>The Basic tee is an honest new take on a classic. The tee uses super soft, pre-shrunk cotton for true comfort and a dependable fit. They are hand cut and sewn locally, with a special dye technique that gives each tee it's own look.</p>
-    <p>Looking to stock your closet? The Basic tee also comes in a 3-pack or 5-pack at a bundle discount.</p>
-  `,
-  details: [
-    "Only the best materials",
-    "Ethically and locally made",
-    "Pre-washed and pre-shrunk",
-    "Machine wash cold with similar colors",
-  ],
-};
-
 const policies = [
   {
     name: "International delivery",
@@ -93,38 +34,29 @@ function classNames(...classes) {
 }
 
 export default function Product() {
-  //dispatch
   const dispatch = useDispatch();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
 
   let productDetails = {};
 
-  //get id from params
   const { id } = useParams();
   useEffect(() => {
     dispatch(fetchProductAction(id));
   }, [id]);
-  //get data from store
   const {
-    loading,
-    error,
     product: { product },
   } = useSelector((state) => state?.products);
 
-  //Get cart items
   useEffect(() => {
     dispatch(getCartItemsFromLocalStorageAction());
   }, []);
-  //get data from store
   const { cartItems } = useSelector((state) => state?.carts);
   const productExists = cartItems?.find(
     (item) => item?._id?.toString() === product?._id.toString()
   );
 
-  //Add to cart handler
   const addToCartHandler = () => {
-    //check if product is in cart
     if (productExists) {
       return Swal.fire({
         icon: "error",
@@ -132,7 +64,6 @@ export default function Product() {
         text: "This product is already in cart",
       });
     }
-    //check if color/size selected
     if (selectedColor === "") {
       return Swal.fire({
         icon: "error",
@@ -182,13 +113,11 @@ export default function Product() {
                 $ {product?.price}.00
               </p>
             </div>
-            {/* Reviews */}
             <div className="mt-4">
               <h2 className="sr-only">Reviews</h2>
               <div className="flex items-center">
                 <p className="text-sm text-gray-700">
                   {product?.reviews?.length > 0 ? product?.averageRating : 0}
-                  {/* <span className="sr-only"> out of 5 stars</span> */}
                 </p>
                 <div className="ml-1 flex items-center">
                   {[0, 1, 2, 3, 4].map((rating) => (
@@ -217,7 +146,6 @@ export default function Product() {
                   </a>
                 </div>
               </div>
-              {/* leave a review */}
 
               <div className="mt-4">
                 <Link to={`/add-review/${product?._id}`}>
@@ -229,7 +157,6 @@ export default function Product() {
             </div>
           </div>
 
-          {/* Image gallery */}
           <div className="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
             <h2 className="sr-only">Images</h2>
 
@@ -252,7 +179,6 @@ export default function Product() {
 
           <div className="mt-8 lg:col-span-5">
             <>
-              {/* Color picker */}
               <div>
                 <h2 className="text-sm font-medium text-gray-900">Color</h2>
                 <div className="flex items-center space-x-3">
@@ -287,7 +213,6 @@ export default function Product() {
                 </div>
               </div>
 
-              {/* Size picker */}
               <div className="mt-8">
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-medium text-gray-900">Size</h2>
@@ -297,7 +222,6 @@ export default function Product() {
                   onChange={setSelectedSize}
                   className="mt-2"
                 >
-                  {/* Choose size */}
                   <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                     {product?.sizes?.map((size) => (
                       <RadioGroup.Option
@@ -318,7 +242,6 @@ export default function Product() {
                   </div>
                 </RadioGroup>
               </div>
-              {/* add to cart */}
               {product?.qtyLeft <= 0 ? (
                 <button
                   style={{ cursor: "not-allowed" }}
@@ -335,7 +258,6 @@ export default function Product() {
                   Add to cart
                 </button>
               )}
-              {/* wishlist */}
               {product?.qtyLeft <= 0 ? (
                 <button
                   style={{ cursor: "not-allowed" }}
@@ -387,9 +309,6 @@ export default function Product() {
                   Add to Wishlist
                 </button>
               )}
-
-              {/* proceed to check */}
-
               {cartItems.length > 0 && (
                 <Link
                   to="/shopping-cart"
@@ -400,7 +319,6 @@ export default function Product() {
               )}
             </>
 
-            {/* Product details */}
             <div className="mt-10">
               <h2 className="text-sm font-medium text-gray-900">Description</h2>
               <div className="prose prose-sm mt-4 text-gray-500">
@@ -408,7 +326,6 @@ export default function Product() {
               </div>
             </div>
 
-            {/* Policies */}
             <section aria-labelledby="policies-heading" className="mt-10">
               <h2 id="policies-heading" className="sr-only">
                 Our Policies
@@ -439,7 +356,6 @@ export default function Product() {
           </div>
         </div>
 
-        {/* Reviews */}
         <section aria-labelledby="reviews-heading" className="mt-16 sm:mt-24">
           <h2
             id="reviews-heading"

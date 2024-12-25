@@ -8,10 +8,9 @@ import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
 
 export default function ManageStocks() {
-  //delete product handler
   const deleteProductHandler = (id) => {};
   let productUrl = `${baseURL}/products`;
-  //dispatch
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(
@@ -20,7 +19,7 @@ export default function ManageStocks() {
       })
     );
   }, [dispatch]);
-  //get data from store
+
   const {
     products: { products },
     loading,
@@ -41,7 +40,8 @@ export default function ManageStocks() {
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+          >
             Add New Product
           </button>
         </div>
@@ -63,49 +63,56 @@ export default function ManageStocks() {
                     <tr>
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
                         Name
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Category
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Status
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Total Qty
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Total Sold
                       </th>
 
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         QTY Left
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Price
                       </th>
                       <th
                         scope="col"
-                        className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                        className="relative py-3.5 pl-3 pr-4 sm:pr-6"
+                      >
                         <span className="sr-only">Edit</span>
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {/* loop here */}
                     {products?.map((product) => (
                       <tr key={product._id}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
@@ -156,18 +163,20 @@ export default function ManageStocks() {
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {product?.price}
                         </td>
-                        {/* edit */}
+
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <Link
                             to={`/admin/products/edit/${product._id}`}
-                            className="text-indigo-600 hover:text-indigo-900">
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke-width="1.5"
                               stroke="currentColor"
-                              class="w-6 h-6">
+                              class="w-6 h-6"
+                            >
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
@@ -178,18 +187,20 @@ export default function ManageStocks() {
                             <span className="sr-only">, {product.name}</span>
                           </Link>
                         </td>
-                        {/* delete */}
+
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <button
                             onClick={() => deleteProductHandler(product._id)}
-                            className="text-indigo-600 hover:text-indigo-900">
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-6 h-6">
+                              className="w-6 h-6"
+                            >
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"

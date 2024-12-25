@@ -18,6 +18,7 @@ import userRoutes from "./routes/usersRoute.js";
 import Order from "./model/Order.js";
 import couponsRouter from "./routes/couponsRouter.js";
 import wishlistRouter from "./routes/wishlistRouter.js";
+import sizeRouter from "./routes/sizeRouter.js";
 
 dotenv.config();
 
@@ -93,6 +94,7 @@ app.use("/api/v1/reviews/", reviewRouter);
 app.use("/api/v1/orders/", orderRouter);
 app.use("/api/v1/coupons/", couponsRouter);
 app.use("/api/v1/wishlist/", wishlistRouter);
+app.use("/api/v1/size/", sizeRouter);
 
 app.use(notFound);
 app.use(globalErrhandler);

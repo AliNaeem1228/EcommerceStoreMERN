@@ -1,5 +1,4 @@
 import axios from "axios";
-import { act } from "react-dom/test-utils";
 import baseURL from "../../../utils/baseURL";
 import {
   resetErrAction,
@@ -7,7 +6,6 @@ import {
 } from "../globalActions/globalActions";
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
 
-//initalsState
 const initialState = {
   orders: [],
   order: null,

@@ -10,19 +10,19 @@ import { createProductAction } from "../../../redux/slices/products/productSlice
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
+import { fetchSizeAction } from "../../../redux/slices/categories/sizeSlice";
 
-//animated components for react-select
 const animatedComponents = makeAnimated();
 
 export default function AddProduct() {
   const dispatch = useDispatch();
-  //files
+
   const [files, setFiles] = useState([]);
   const [fileErrs, setFileErrs] = useState([]);
-  //file handlechange
+
   const fileHandleChange = (event) => {
     const newFiles = Array.from(event.target.files);
-    //validation
+
     const newErrs = [];
     newFiles.forEach((file) => {
       if (file?.size > 1000000) {
@@ -35,36 +35,39 @@ export default function AddProduct() {
     setFiles(newFiles);
     setFileErrs(newErrs);
   };
-  //Sizes
-  const sizes = ["S", "M", "L", "XL", "XXL"];
-  const [sizeOption, setSizeOption] = useState([]);
-  const handleSizeChange = (sizes) => {
-    setSizeOption(sizes);
-  };
-  //converted sizes
-  const sizeOptionsCoverted = sizes?.map((size) => {
-    return {
-      value: size,
-      label: size,
-    };
-  });
 
-  //categories
+  const [sizeOption, setSizeOption] = useState([]);
+  const handleSizeChange = (sizes) => setSizeOption(sizes);
+
+  useEffect(() => {
+    dispatch(fetchSizeAction());
+  }, [dispatch]);
+
+  const {
+    sizes,
+    loading: sizeLoading,
+    error: sizeError,
+  } = useSelector((state) => state?.size);
+
+  const sizeOptionsConverted = sizes?.map((size) => ({
+    value: size.name,
+    label: size.name,
+  }));
+
   useEffect(() => {
     dispatch(fetchCategoriesAction());
   }, [dispatch]);
-  //select data from store
+
   const { categories } = useSelector((state) => state?.categories?.categories);
 
-  //brands
   useEffect(() => {
     dispatch(fetchBrandsAction());
   }, [dispatch]);
-  //select data from store
+
   const {
     brands: { brands },
   } = useSelector((state) => state?.brands);
-  //colors
+
   const [colorsOption, setColorsOption] = useState([]);
 
   const {
@@ -77,7 +80,7 @@ export default function AddProduct() {
   const handleColorChange = (colors) => {
     setColorsOption(colors);
   };
-  //converted colors
+
   const colorsCoverted = colors?.map((color) => {
     return {
       value: color?.name,
@@ -85,34 +88,29 @@ export default function AddProduct() {
     };
   });
 
-  //---form data---
   const [formData, setFormData] = useState({});
 
-  //onChange
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //get product from store
   const { product, isAdded, loading, error } = useSelector(
     (state) => state?.products
   );
 
-  //onSubmit
   const handleOnSubmit = (e) => {
     e.preventDefault();
     console.log(fileErrs);
-    //dispatch
+
     dispatch(
       createProductAction({
         ...formData,
         files,
         colors: colorsOption?.map((color) => color.label),
-        sizes: sizeOption?.map((size) => size?.label),
+        sizes: sizeOption?.map((size) => size.label),
       })
     );
 
-    //reset form data
     setFormData({
       name: "",
       description: "",
@@ -161,26 +159,30 @@ export default function AddProduct() {
                   />
                 </div>
               </div>
-              {/* size option */}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Select Size
                 </label>
-                <Select
-                  components={animatedComponents}
-                  isMulti
-                  name="sizes"
-                  options={sizeOptionsCoverted}
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  isClearable={true}
-                  isLoading={false}
-                  isSearchable={true}
-                  closeMenuOnSelect={false}
-                  onChange={(item) => handleSizeChange(item)}
-                />
+                {sizeLoading ? (
+                  <LoadingComponent />
+                ) : sizeError ? (
+                  <ErrorMsg message={sizeError} />
+                ) : (
+                  <Select
+                    components={animatedComponents}
+                    isMulti
+                    name="sizes"
+                    options={sizeOptionsConverted}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    isClearable={true}
+                    closeMenuOnSelect={false}
+                    onChange={handleSizeChange}
+                  />
+                )}
               </div>
-              {/* Select category */}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Select Category
@@ -200,7 +202,7 @@ export default function AddProduct() {
                   ))}
                 </select>
               </div>
-              {/* Select Brand */}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Select Brand
@@ -221,7 +223,6 @@ export default function AddProduct() {
                 </select>
               </div>
 
-              {/* Select Color */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Select Color
@@ -241,7 +242,6 @@ export default function AddProduct() {
                 />
               </div>
 
-              {/* upload images */}
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                   htmlFor="cover-photo"
@@ -287,7 +287,6 @@ export default function AddProduct() {
                 </div>
               </div>
 
-              {/* price */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Price
@@ -303,7 +302,6 @@ export default function AddProduct() {
                 </div>
               </div>
 
-              {/* Quantity */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Total Quantity
@@ -318,7 +316,7 @@ export default function AddProduct() {
                   />
                 </div>
               </div>
-              {/* description */}
+
               <div>
                 <label
                   htmlFor="comment"

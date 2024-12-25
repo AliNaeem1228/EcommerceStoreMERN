@@ -9,19 +9,17 @@ const ErrorMsg = ({ message }) => {
 
   useEffect(() => {
     if (message) {
-      // Show the alert
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: message,
       });
 
-      // Dispatch the reset action after showing the alert
       dispatch(resetErrAction());
     }
   }, [message, dispatch]);
 
-  return null; // This component does not render anything visually
+  return null;
 };
 
 export default ErrorMsg;

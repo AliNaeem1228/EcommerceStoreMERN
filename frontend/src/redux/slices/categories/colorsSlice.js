@@ -58,7 +58,7 @@ export const fetchColorsAction = createAsyncThunk(
 );
 //slice
 const colorsSlice = createSlice({
-  name: "brands",
+  name: "colors",
   initialState,
   extraReducers: (builder) => {
     //create

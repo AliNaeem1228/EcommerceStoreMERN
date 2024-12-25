@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { createColorAction } from "../../../redux/slices/categories/colorsSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
-export default function AddColor() {
+import { createSizeAction } from "../../../redux/slices/categories/sizeSlice";
+
+export default function AddSize() {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -18,17 +19,17 @@ export default function AddColor() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    dispatch(createColorAction(formData?.name));
+    dispatch(createSizeAction(formData?.name));
     setFormData({
       name: "",
     });
   };
 
-  const { error, loading, isAdded } = useSelector((state) => state?.colors);
+  const { error, loading, isAdded } = useSelector((state) => state?.size);
 
   return (
     <>
-      {isAdded && <SuccessMsg message="Color Created Successfully" />}
+      {isAdded && <SuccessMsg message="Size Created Successfully" />}
       {error && <ErrorMsg message={error?.message} />}
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -47,7 +48,7 @@ export default function AddColor() {
             />
           </svg>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Add Product Color
+            Add Product Size
           </h2>
         </div>
 
@@ -78,7 +79,7 @@ export default function AddColor() {
                     type="submit"
                     className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Add Product Color
+                    Add Product Size
                   </button>
                 )}
               </div>
@@ -107,20 +108,21 @@ export default function AddColor() {
                 <div>
                   <div>
                     <Link
+                      to="/admin/add-brand"
+                      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
+                    >
+                      Add Color
+                    </Link>
+                  </div>
+                </div>
+
+                <div>
+                  <div>
+                    <Link
                       to="/admin/add-category"
                       className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                     >
                       Add Category
-                    </Link>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <Link
-                      to="/admin/add-size"
-                      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
-                    >
-                      Add Size
                     </Link>
                   </div>
                 </div>

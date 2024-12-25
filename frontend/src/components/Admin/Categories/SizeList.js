@@ -1,41 +1,38 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchCategoriesAction } from "../../../redux/slices/categories/categoriesSlice";
-
+import { fetchSizeAction } from "../../../redux/slices/categories/sizeSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
 
-export default function ManageCategories() {
+export default function SizeList() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchCategoriesAction());
+    dispatch(fetchSizeAction());
   }, [dispatch]);
-  const {
-    categories: { categories },
-    loading,
-    error,
-  } = useSelector((state) => state?.categories);
+
+  const { sizes, loading, error } = useSelector((state) => state?.size);
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
-            All Categories
+            All Size Categories [{sizes?.length}]
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title,
+            A list of all sizes in your account including their name and
+            creation date.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <Link
-            to="/admin/add-category"
+            to="/admin/add-size"
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
           >
-            Add New Category
+            Add New Size
           </Link>
         </div>
       </div>
@@ -43,7 +40,7 @@ export default function ManageCategories() {
         <LoadingComponent />
       ) : error ? (
         <ErrorMsg message={error?.message} />
-      ) : categories?.length <= 0 ? (
+      ) : sizes?.length <= 0 ? (
         <NoDataFound />
       ) : (
         <div className="mt-8 flex flex-col">
@@ -63,44 +60,24 @@ export default function ManageCategories() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        No. Products
-                      </th>
-
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
                         Created At
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {categories?.map((category) => (
-                      <tr key={category?._id}>
+                    {sizes?.map((size) => (
+                      <tr key={size?._id}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                           <div className="flex items-center">
-                            <div className="h-10 w-10 flex-shrink-0">
-                              <img
-                                className="h-10 w-10 rounded-full"
-                                src={category?.image}
-                                alt={category?.name}
-                              />
-                            </div>
                             <div className="ml-4">
                               <div className="font-medium text-gray-900">
-                                {category?.name}
+                                {size?.name}
                               </div>
                             </div>
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          <div className="text-gray-900">
-                            {category?.products?.length}
-                          </div>
-                        </td>
-
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {new Date(category?.createdAt).toLocaleDateString()}
+                          {new Date(size?.createdAt).toLocaleDateString()}
                         </td>
                       </tr>
                     ))}

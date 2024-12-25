@@ -24,7 +24,6 @@ const OrderSchema = new Schema(
       type: String,
       default: randomTxt + randomNumbers,
     },
-    //for stripe payment
     paymentStatus: {
       type: String,
       default: "Not paid",
@@ -41,7 +40,6 @@ const OrderSchema = new Schema(
       type: String,
       default: "Not specified",
     },
-    //For admin
     status: {
       type: String,
       default: "pending",

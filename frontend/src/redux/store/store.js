@@ -9,8 +9,8 @@ import productReducer from "../slices/products/productSlices";
 import reviewsReducer from "../slices/reviews/reviewsSlice";
 import usersReducer from "../slices/users/usersSlice";
 import wishlistReducer from "../slices/wishlist/wishlistSlice";
+import sizeReducer from "../slices/categories/sizeSlice";
 
-//store
 const store = configureStore({
   reducer: {
     users: usersReducer,
@@ -23,6 +23,7 @@ const store = configureStore({
     orders: ordersReducer,
     reviews: reviewsReducer,
     wishlist: wishlistReducer,
+    size: sizeReducer,
   },
 });
 

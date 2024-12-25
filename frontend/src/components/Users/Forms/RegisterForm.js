@@ -5,29 +5,26 @@ import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 
 const RegisterForm = () => {
-  //dispatch
   const dispatch = useDispatch();
-  //dispatch
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-  //---Destructuring---
+
   const { name, email, password } = formData;
-  //---onchange handler----
+
   const onChangeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //---onsubmit handler----
   const onSubmitHandler = (e) => {
     e.preventDefault();
     dispatch(registerUserAction({ name, email, password }));
   };
-  //select store data
+
   const { user, error, loading } = useSelector((state) => state?.users);
-  //redirect
+
   useEffect(() => {
     if (user) {
       window.location.href = "/login";
@@ -43,7 +40,6 @@ const RegisterForm = () => {
                 <h3 className="mb-8 text-4xl md:text-5xl font-bold font-heading">
                   Signing up with social is super quick
                 </h3>
-                {/* errr */}
                 {error && <ErrorMsg message={error?.message} />}
                 <p className="mb-10">Please, do not hesitate</p>
                 <form onSubmit={onSubmitHandler}>
@@ -95,8 +91,7 @@ const RegisterForm = () => {
         <div
           className="hidden lg:block lg:absolute top-0 bottom-0 right-0 lg:w-3/6 bg-center bg-cover bg-no-repeat"
           style={{
-            backgroundImage:
-              'url("https://cdn.pixabay.com/photo/2017/03/29/04/47/high-heels-2184095_1280.jpg")',
+            backgroundImage: 'url("/images/Form.jpg")',
           }}
         />
       </section>

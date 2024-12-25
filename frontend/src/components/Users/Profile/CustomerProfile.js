@@ -5,14 +5,11 @@ import CustomerDetails from "./CustomerDetails";
 import ShippingAddressDetails from "./ShippingAddressDetails";
 
 export default function CustomerProfile() {
-  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserProfileAction());
   }, [dispatch]);
-  //get data from store
   const { error, loading, profile } = useSelector((state) => state?.users);
-  //get orders
   const orders = profile?.user?.orders;
 
   return (
@@ -82,7 +79,7 @@ export default function CustomerProfile() {
                         {order?.status}
                       </time>
                     </p>
-                    {/* payment method */}
+
                     <div>
                       <dt className="font-medium text-gray-900">
                         Payment Method
@@ -93,7 +90,6 @@ export default function CustomerProfile() {
                     </div>
                   </div>
 
-                  {/* Products */}
                   <div className="mt-6">
                     <h2 className="sr-only">Products purchased</h2>
 
@@ -126,7 +122,6 @@ export default function CustomerProfile() {
                               </div>
                             </div>
                           </div>
-                          {/* payment status icon */}
 
                           <div className="flex items-center mb-3">
                             <svg
@@ -153,7 +148,6 @@ export default function CustomerProfile() {
                   </div>
                 </div>
               </div>
-              {/* shipping address */}
               <ShippingAddressDetails
                 shippingAddress={profile?.user?.shippingAddress}
               />

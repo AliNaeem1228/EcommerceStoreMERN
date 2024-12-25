@@ -4,9 +4,8 @@ import { useParams } from "react-router-dom";
 import { updateOrderAction } from "../../../redux/slices/orders/ordersSlices";
 
 const UpdateOrders = () => {
-  //get the id from params
   const { id } = useParams();
-  //dispatch
+
   const dispatch = useDispatch();
   const [order, setOrder] = React.useState({
     status: "pending",
@@ -14,7 +13,6 @@ const UpdateOrders = () => {
 
   const onChange = (e) => {
     dispatch(updateOrderAction({ status: e.target.value, id }));
-    //redirect
     window.location.href = "/admin";
   };
 
@@ -24,7 +22,8 @@ const UpdateOrders = () => {
         <div>
           <label
             htmlFor="location"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Update Order
           </label>
           <select
@@ -33,7 +32,8 @@ const UpdateOrders = () => {
             onChange={onChange}
             value={order.status}
             className="mt-1 block w-full rounded-md border-2 border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-            defaultValue="Canada">
+            defaultValue="Canada"
+          >
             <option value="pending">Pending</option>
             <option value="processing">Processing</option>
             <option value="shipped">Shipped</option>

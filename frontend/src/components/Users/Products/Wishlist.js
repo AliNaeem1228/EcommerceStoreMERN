@@ -12,7 +12,6 @@ import Swal from "sweetalert2";
 export default function Wishlist() {
   const dispatch = useDispatch();
 
-  // Fetch wishlist items on component mount
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userInfo?._id;
@@ -22,10 +21,8 @@ export default function Wishlist() {
     }
   }, [dispatch]);
 
-  // Access wishlist data from Redux store
   const { wishlist, loading, error } = useSelector((state) => state.wishlist);
 
-  // Remove wishlist item handler
   const removeWishlistItemHandler = (wishlistId) => {
     Swal.fire({
       title: "Are you sure?",

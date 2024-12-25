@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  CheckIcon,
-  ClockIcon,
-  QuestionMarkCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/20/solid";
+import { XMarkIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,12 +13,10 @@ import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 
 export default function ShoppingCart() {
-  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCartItemsFromLocalStorageAction());
   }, [dispatch]);
-  //coupon state
   const [couponCode, setCouponCode] = useState(null);
   const applyCouponSubmit = (e) => {
     e.preventDefault();
@@ -31,31 +24,25 @@ export default function ShoppingCart() {
     setCouponCode("");
   };
 
-  //get coupon  from store
   const { coupon, loading, error, isAdded } = useSelector(
     (state) => state?.coupons
   );
-  //get cart items from store
   const { cartItems } = useSelector((state) => state?.carts);
-  //add to cart handler
   const changeOrderItemQtyHandler = (productId, qty) => {
     dispatch(changeOrderItemQty({ productId, qty }));
     dispatch(getCartItemsFromLocalStorageAction());
   };
   console.log(cartItems);
-  //calculate total price
   let sumTotalPrice = 0;
   sumTotalPrice = cartItems?.reduce((acc, current) => {
     return acc + current?.totalPrice;
   }, 0);
 
-  //check if coupon found
   if (coupon) {
     sumTotalPrice =
       sumTotalPrice - (sumTotalPrice * coupon?.coupon?.discount) / 100;
   }
-  //price of the product - (price of product x discount/100)
-  //remove cart  Item handler
+
   const removeOrderItemQtyHandler = (productId) => {
     dispatch(removeOrderItemQty(productId));
     dispatch(getCartItemsFromLocalStorageAction());
@@ -144,7 +131,6 @@ export default function ShoppingCart() {
                             +
                           </button>
                         </div>
-                        {/* remove */}
                         <div className="absolute top-0 right-0">
                           <button
                             onClick={() =>
@@ -164,7 +150,6 @@ export default function ShoppingCart() {
             </ul>
           </section>
 
-          {/* Order summary */}
           <section
             aria-labelledby="summary-heading"
             className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
@@ -184,18 +169,15 @@ export default function ShoppingCart() {
                 </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4"></div>
-              {/* add coupon */}
               <dt className="flex items-center text-sm text-gray-600">
                 <span>Have coupon code? </span>
               </dt>
-              {/* errr */}
               {error && <ErrorMsg message={error?.message} />}
               {isAdded && (
                 <SuccessMsg
                   message={`Congratulation you got ${coupon?.coupon?.discount} %`}
                 />
               )}
-              {/* success */}
 
               <form onSubmit={applyCouponSubmit}>
                 <div className="mt-1">
@@ -228,7 +210,6 @@ export default function ShoppingCart() {
 
             <div className="mt-6">
               <Link
-                //  pass data to checkout page
                 to="/order-payment"
                 state={{
                   sumTotalPrice,

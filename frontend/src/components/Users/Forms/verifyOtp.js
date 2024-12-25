@@ -5,32 +5,26 @@ import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import { verifyOtpAction } from "../../../redux/slices/users/usersSlice";
 
 const VerifyOtp = ({ userId }) => {
-  // dispatch
   const dispatch = useDispatch();
 
-  // form state
   const [otp, setOtp] = useState("");
 
-  // get data from store
   const { error, loading, success, isVerified } = useSelector(
     (state) => state?.otp
   );
 
-  // onchange handler for OTP input
   const onChangeHandler = (e) => {
     setOtp(e.target.value);
   };
 
-  // onsubmit handler
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    dispatch(verifyOtpAction({ _id: userId, otp })); // Dispatch action with _id and otp
+    dispatch(verifyOtpAction({ _id: userId, otp }));
   };
 
-  // redirect on success
   useEffect(() => {
     if (success && isVerified) {
-      window.location.href = "/"; // Redirect to a protected route
+      window.location.href = "/";
     }
   }, [success, isVerified]);
 
@@ -48,7 +42,6 @@ const VerifyOtp = ({ userId }) => {
                 <p className="mb-10 font-semibold font-heading">
                   Enter the OTP sent to your email
                 </p>
-                {/* error message */}
                 {error && <ErrorMsg message={error} />}
                 <form
                   className="flex flex-wrap -mx-4"
@@ -87,8 +80,7 @@ const VerifyOtp = ({ userId }) => {
             <div
               className="w-full md:w-2/6 h-128 md:h-auto flex items-center lg:items-end px-4 pb-20 bg-cover bg-no-repeat"
               style={{
-                backgroundImage:
-                  'url("https://cdn.pixabay.com/photo/2016/03/27/22/22/phone-1283572_1280.jpg")',
+                backgroundImage: 'url("/images/Form.jpg")',
               }}
             ></div>
           </div>
