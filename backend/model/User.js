@@ -33,7 +33,7 @@ const UserShema = new Schema(
     },
     isVerified: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     hasShippingAddress: {
       type: Boolean,
@@ -64,6 +64,10 @@ const UserShema = new Schema(
       phone: {
         type: String,
       },
+    },
+    socketId: {
+      type: String,
+      default: null,
     },
   },
   {

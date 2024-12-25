@@ -7,12 +7,13 @@ import {
   GlobeAmericasIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductAction } from "../../../redux/slices/products/productSlices";
 import {
   addOrderToCartaction,
   getCartItemsFromLocalStorageAction,
+  changeOrderItemQty,
 } from "../../../redux/slices/cart/cartSlices";
 import { createWishlistAction } from "../../../redux/slices/wishlist/wishlistSlice";
 
@@ -38,6 +39,7 @@ export default function Product() {
   const dispatch = useDispatch();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   let productDetails = {};
 
@@ -45,6 +47,7 @@ export default function Product() {
   useEffect(() => {
     dispatch(fetchProductAction(id));
   }, [id]);
+
   const {
     product: { product },
   } = useSelector((state) => state?.products);
@@ -52,19 +55,17 @@ export default function Product() {
   useEffect(() => {
     dispatch(getCartItemsFromLocalStorageAction());
   }, []);
+
   const { cartItems } = useSelector((state) => state?.carts);
   const productExists = cartItems?.find(
     (item) => item?._id?.toString() === product?._id.toString()
   );
 
+  const adjustQuantity = (adjustment) => {
+    setQuantity((prevQty) => Math.max(1, prevQty + adjustment));
+  };
+
   const addToCartHandler = () => {
-    if (productExists) {
-      return Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "This product is already in cart",
-      });
-    }
     if (selectedColor === "") {
       return Swal.fire({
         icon: "error",
@@ -79,26 +80,35 @@ export default function Product() {
         text: "Please select product size",
       });
     }
-    dispatch(
-      addOrderToCartaction({
-        _id: product?._id,
-        name: product?.name,
-        qty: 1,
-        price: product?.price,
-        description: product?.description,
-        color: selectedColor,
-        size: selectedSize,
-        image: product?.images[0],
-        totalPrice: product?.price,
-        qtyLeft: product?.qtyLeft,
-      })
-    );
-    Swal.fire({
-      icon: "success",
-      title: "Good Job",
-      text: "Product added to cart successfully",
-    });
-    return dispatch(getCartItemsFromLocalStorageAction());
+    if (productExists) {
+      dispatch(changeOrderItemQty({ productId: product._id, qty: quantity }));
+      Swal.fire({
+        icon: "success",
+        title: "Updated",
+        text: "Product quantity updated in cart successfully",
+      });
+    } else {
+      dispatch(
+        addOrderToCartaction({
+          _id: product?._id,
+          name: product?.name,
+          qty: quantity,
+          price: product?.price,
+          description: product?.description,
+          color: selectedColor,
+          size: selectedSize,
+          image: product?.images[0],
+          totalPrice: product?.price * quantity,
+          qtyLeft: product?.qtyLeft,
+        })
+      );
+      Swal.fire({
+        icon: "success",
+        title: "Added",
+        text: "Product added to cart successfully",
+      });
+    }
+    dispatch(getCartItemsFromLocalStorageAction());
   };
 
   const buyNowHandler = () => {
@@ -214,6 +224,22 @@ export default function Product() {
 
           <div className="mt-8 lg:col-span-5">
             <>
+              <div className="mt-8 flex items-center">
+                <button
+                  onClick={() => adjustQuantity(-1)}
+                  className="px-3 py-1 border rounded-md"
+                  disabled={quantity === 1}
+                >
+                  -
+                </button>
+                <span className="px-4">{quantity}</span>
+                <button
+                  onClick={() => adjustQuantity(1)}
+                  className="px-3 py-1 border rounded-md"
+                >
+                  +
+                </button>
+              </div>
               <div>
                 <h2 className="text-sm font-medium text-gray-900">Color</h2>
                 <div className="flex items-center space-x-3">
@@ -288,10 +314,10 @@ export default function Product() {
               ) : (
                 <div>
                   <button
-                    onClick={() => addToCartHandler()}
-                    className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick={addToCartHandler}
+                    className="mt-8 flex w-full justify-center rounded-md bg-indigo-600 py-3 px-8 text-white"
                   >
-                    Add to cart
+                    {productExists ? "Update Quantity in Cart" : "Add to Cart"}
                   </button>
                   <button
                     onClick={() => buyNowHandler()}

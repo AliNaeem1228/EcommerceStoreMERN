@@ -1,110 +1,102 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-const ChatComponent = () => {
-  const [socket, setSocket] = useState(null);
-  const [message, setMessage] = useState("");
+const socket = io("http://localhost:8000");
+
+const Chat = () => {
   const [messages, setMessages] = useState([]);
-  const [nickname, setNickname] = useState("");
-  const [roomNumber, setRoomNumber] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userId = userInfo?.userFound?._id;
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3000/chat", {
-      auth: { token: "123456" }, // Replace with a dynamic token if needed
-    });
-
-    newSocket.on("chat message", (data) => {
-      setMessages((prevMessages) => [...prevMessages, data]);
-    });
-
-    newSocket.on("online", (users) => {
-      setOnlineUsers(users);
-    });
-
-    newSocket.on("typing", (data) => {
-      console.log(data); // Optional: Display typing notification
-    });
-
-    setSocket(newSocket);
-    return () => newSocket.disconnect();
-  }, []);
-
-  const handleLogin = () => {
-    if (nickname && roomNumber) {
-      socket.emit("login", { nickname, roomNumber });
-      setIsLoggedIn(true);
+    if (!userId) {
+      console.error(
+        "User ID not found. Please ensure userInfo contains '_id'."
+      );
+      return;
     }
-  };
+
+    // Join the room
+    socket.emit("joinRoom", "support-room");
+
+    // Listen for messages from the server
+    socket.on("receiveMessage", (data) => {
+      setMessages((prev) => [...prev, data]);
+    });
+
+    // Cleanup listeners
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, [userId]);
 
   const sendMessage = () => {
-    if (message) {
-      const chatMessage = {
-        name: nickname,
-        roomNumber,
-        text: message,
-      };
-      socket.emit("chat message", chatMessage);
-      setMessage("");
-    }
+    if (newMessage.trim() === "") return;
+
+    const messageData = {
+      room: "support-room",
+      senderId: userId,
+      message: newMessage,
+    };
+
+    // Emit the message to the server
+    socket.emit("sendMessage", messageData);
+
+    // Update local chat history
+    setMessages((prev) => [...prev, messageData]);
+    setNewMessage("");
   };
 
-  const handleTyping = () => {
-    socket.emit("typing", { name: nickname, roomNumber });
-  };
+  if (!userId) {
+    return (
+      <div className="w-full max-w-lg mx-auto mt-8 text-center">
+        <p className="text-red-500">
+          Unable to load user information. Please log in again.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      {!isLoggedIn ? (
-        <div>
-          <h2>Join Chat</h2>
-          <input
-            type="text"
-            placeholder="Enter your nickname"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-          />
-          <br />
-          <input
-            type="text"
-            placeholder="Enter room number"
-            value={roomNumber}
-            onChange={(e) => setRoomNumber(e.target.value)}
-          />
-          <br />
-          <button onClick={handleLogin}>Join</button>
-        </div>
-      ) : (
-        <div>
-          <h2>Chat Room: {roomNumber}</h2>
-          <p>Online Users: {onlineUsers.map((user) => user.name).join(", ")}</p>
+    <div className="w-full max-w-lg mx-auto mt-8">
+      <div className="bg-gray-100 border rounded-lg p-4 h-80 overflow-y-scroll">
+        {messages.map((msg, index) => (
           <div
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              height: "300px",
-              overflowY: "scroll",
-            }}
+            key={index}
+            className={`mb-2 flex ${
+              msg.senderId === userId ? "justify-end" : "justify-start"
+            }`}
           >
-            {messages.map((msg, index) => (
-              <div key={index}>
-                <strong>{msg.name}:</strong> {msg.text} <em>{msg.date}</em>
-              </div>
-            ))}
+            <div
+              className={`max-w-xs px-4 py-2 rounded-lg ${
+                msg.senderId === userId
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-black"
+              }`}
+            >
+              {msg.message}
+            </div>
           </div>
-          <input
-            type="text"
-            placeholder="Type a message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleTyping}
-          />
-          <button onClick={sendMessage}>Send</button>
-        </div>
-      )}
+        ))}
+      </div>
+      <div className="mt-4 flex">
+        <input
+          type="text"
+          className="border rounded-l-lg p-2 flex-grow"
+          placeholder="Type a message..."
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+        />
+        <button
+          className="bg-blue-500 text-white px-4 rounded-r-lg"
+          onClick={sendMessage}
+        >
+          Send
+        </button>
+      </div>
     </div>
   );
 };
 
-export default ChatComponent;
+export default Chat;

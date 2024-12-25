@@ -316,7 +316,6 @@ export default function AddProduct() {
                   />
                 </div>
               </div>
-
               <div>
                 <label
                   htmlFor="comment"

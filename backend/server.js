@@ -18,6 +18,9 @@ import Order from "./model/Order.js";
 import couponsRouter from "./routes/couponsRouter.js";
 import wishlistRouter from "./routes/wishlistRouter.js";
 import sizeRouter from "./routes/sizeRouter.js";
+import Chat from "./model/Chat.js";
+import { Server } from "socket.io";
+// import chatRouter from "./routes/chatRouter.js";
 
 dotenv.config();
 
@@ -78,7 +81,7 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join("public", "index.html"));
@@ -94,12 +97,43 @@ app.use("/api/v1/orders/", orderRouter);
 app.use("/api/v1/coupons/", couponsRouter);
 app.use("/api/v1/wishlist/", wishlistRouter);
 app.use("/api/v1/size/", sizeRouter);
+// app.use("/api/v1/chats", chatRouter);
 
 app.use(notFound);
 app.use(globalErrhandler);
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
+
+// Socket.IO setup
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Replace with your frontend URL
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(`A user connected: ${socket.id}`);
+
+  // Join the room
+  socket.on("joinRoom", (room) => {
+    socket.join(room);
+    console.log(`${socket.id} joined ${room}`);
+  });
+
+  // Handle message sending
+  socket.on("sendMessage", (data) => {
+    console.log("Message received:", data);
+
+    // Broadcast the message to everyone in the room except the sender
+    socket.to(data.room).emit("receiveMessage", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`A user disconnected: ${socket.id}`);
+  });
+});
 
 server.listen(PORT, () =>
   console.log(`Server is up and running on port ${PORT}`)

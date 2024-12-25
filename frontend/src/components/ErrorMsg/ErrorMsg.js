@@ -1,16 +1,24 @@
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 import Swal from "sweetalert2";
-
+import { useDispatch } from "react-redux";
 import { resetErrAction } from "../../redux/slices/globalActions/globalActions";
 
 const ErrorMsg = ({ message }) => {
   const dispatch = useDispatch();
-  Swal.fire({
-    icon: "error",
-    title: "Oops...",
-    text: message,
-  });
-  dispatch(resetErrAction());
+
+  useEffect(() => {
+    if (message) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: message,
+      }).then(() => {
+        dispatch(resetErrAction()); // Reset error state after the alert is acknowledged
+      });
+    }
+  }, [message, dispatch]);
+
+  return null; // This component does not need to render anything visually
 };
 
 export default ErrorMsg;
