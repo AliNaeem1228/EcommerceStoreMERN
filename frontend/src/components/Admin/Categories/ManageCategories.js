@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import { fetchCategoriesAction } from "../../../redux/slices/categories/categoriesSlice";
+import {
+  fetchCategoriesAction,
+  deleteCategoriesAction,
+} from "../../../redux/slices/categories/categoriesSlice";
 
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
@@ -9,14 +13,39 @@ import NoDataFound from "../../NoDataFound/NoDataFound";
 
 export default function ManageCategories() {
   const dispatch = useDispatch();
+
+  // Fetch categories on component load
   useEffect(() => {
     dispatch(fetchCategoriesAction());
   }, [dispatch]);
+
   const {
     categories: { categories },
     loading,
     error,
   } = useSelector((state) => state?.categories);
+
+  // Handle delete with SweetAlert2
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are You Sure, You want to Delete this category?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteCategoriesAction(id)).then(() => {
+          // Re-fetch categories after deletion
+          dispatch(fetchCategoriesAction());
+        });
+
+        Swal.fire("Deleted!", "The category has been deleted.", "success");
+      }
+    });
+  };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -26,7 +55,8 @@ export default function ManageCategories() {
             All Categories
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title,
+            A list of all the categories in your account, including their name,
+            product count, and creation date.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -65,12 +95,17 @@ export default function ManageCategories() {
                       >
                         No. Products
                       </th>
-
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
                         Created At
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900"
+                      >
+                        Actions
                       </th>
                     </tr>
                   </thead>
@@ -98,9 +133,16 @@ export default function ManageCategories() {
                             {category?.products?.length}
                           </div>
                         </td>
-
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {new Date(category?.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-right text-sm font-medium">
+                          <button
+                            onClick={() => handleDelete(category?._id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     ))}

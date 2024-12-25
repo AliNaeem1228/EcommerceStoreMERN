@@ -66,7 +66,7 @@ export default function Wishlist() {
               <li key={item._id} className="flex py-6">
                 <div className="flex-shrink-0">
                   <img
-                    src={item.product?.images || "/placeholder-image.jpg"} // Placeholder for missing images
+                    src={item.product?.images || "/placeholder-image.jpg"}
                     alt={item.product?.name || "No name"}
                     className="h-24 w-24 rounded-md object-cover object-center"
                   />

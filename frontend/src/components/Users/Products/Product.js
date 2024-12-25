@@ -7,7 +7,7 @@ import {
   GlobeAmericasIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductAction } from "../../../redux/slices/products/productSlices";
 import {
@@ -34,6 +34,7 @@ function classNames(...classes) {
 }
 
 export default function Product() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -75,7 +76,7 @@ export default function Product() {
       return Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Please select  p roduct size",
+        text: "Please select product size",
       });
     }
     dispatch(
@@ -98,6 +99,40 @@ export default function Product() {
       text: "Product added to cart successfully",
     });
     return dispatch(getCartItemsFromLocalStorageAction());
+  };
+
+  const buyNowHandler = () => {
+    if (selectedColor === "") {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...!",
+        text: "Please select product color",
+      });
+    }
+    if (selectedSize === "") {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please select product size",
+      });
+    }
+    localStorage.removeItem("cartItem");
+    dispatch(
+      addOrderToCartaction({
+        _id: product?._id,
+        name: product?.name,
+        qty: 1,
+        price: product?.price,
+        description: product?.description,
+        color: selectedColor,
+        size: selectedSize,
+        image: product?.images[0],
+        totalPrice: product?.price,
+        qtyLeft: product?.qtyLeft,
+      })
+    );
+    dispatch(getCartItemsFromLocalStorageAction());
+    navigate("/shopping-cart");
   };
 
   return (
@@ -248,15 +283,23 @@ export default function Product() {
                   disabled
                   className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 py-3 px-8 text-base font-medium text-whitefocus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                  Add to cart
+                  Out of Stock
                 </button>
               ) : (
-                <button
-                  onClick={() => addToCartHandler()}
-                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Add to cart
-                </button>
+                <div>
+                  <button
+                    onClick={() => addToCartHandler()}
+                    className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                    Add to cart
+                  </button>
+                  <button
+                    onClick={() => buyNowHandler()}
+                    className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-green-600 py-3 px-8 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                    Buy Now
+                  </button>
+                </div>
               )}
               {product?.qtyLeft <= 0 ? (
                 <button
@@ -308,14 +351,6 @@ export default function Product() {
                 >
                   Add to Wishlist
                 </button>
-              )}
-              {cartItems.length > 0 && (
-                <Link
-                  to="/shopping-cart"
-                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-green-800 py-3 px-8 text-base font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Proceed to checkout
-                </Link>
               )}
             </>
 

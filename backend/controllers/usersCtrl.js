@@ -39,7 +39,7 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
       res.json({
         message: "User is not Verified",
         verified: userFound.isVerified,
-        user: userFound
+        user: userFound,
       });
     } else if (userFound.isVerified) {
       res.json({
@@ -48,6 +48,7 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
         userFound,
         token: generateToken(userFound?._id),
         verified: userFound.isVerified,
+        isAdmin: userFound.isAdmin,
         _id: userFound._id,
       });
     }

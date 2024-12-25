@@ -58,8 +58,6 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const sizeCategories = ["S", "M", "L", "XL", "XXL"];
-
 export default function ProductsFilters() {
   //dispatch
   const dispatch = useDispatch();
@@ -72,7 +70,6 @@ export default function ProductsFilters() {
   const [color, setColor] = useState("");
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
-  const [size, setSize] = useState("");
   console.log(color);
   //build up url
   let productUrl = `${baseURL}/products`;
@@ -81,9 +78,6 @@ export default function ProductsFilters() {
   }
   if (brand) {
     productUrl = `${productUrl}&brand=${brand}`;
-  }
-  if (size) {
-    productUrl = `${productUrl}&size=${size}`;
   }
   if (price) {
     productUrl = `${productUrl}&price=${price}`;
@@ -98,7 +92,7 @@ export default function ProductsFilters() {
         url: productUrl,
       })
     );
-  }, [dispatch, category, size, brand, price, color]);
+  }, [dispatch, category, brand, price, color]);
   //get store data
   const {
     products: { products },
@@ -412,56 +406,6 @@ export default function ProductsFilters() {
                       )}
                     </Disclosure>
                     {/*  end product brand categories section */}
-
-                    {/* product size categories   */}
-                    <Disclosure
-                      as="div"
-                      key="disclosure"
-                      className="border-t border-gray-200 px-4 py-6"
-                    >
-                      {({ open }) => (
-                        <>
-                          <h3 className="-mx-2 -my-3 flow-root">
-                            <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                              <span className="font-medium text-gray-900">
-                                Size
-                              </span>
-                              <span className="ml-6 flex items-center">
-                                {open ? (
-                                  <MinusIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                ) : (
-                                  <PlusIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                )}
-                              </span>
-                            </Disclosure.Button>
-                          </h3>
-                          <Disclosure.Panel className="pt-6">
-                            <div className="space-y-6">
-                              {sizeCategories.map((size) => (
-                                <div key={size} className="flex items-center">
-                                  <input
-                                    type="radio"
-                                    name="size"
-                                    onClick={() => setSize(size)}
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                  />
-                                  <label className="ml-3 min-w-0 flex-1 text-gray-500">
-                                    {size}
-                                  </label>
-                                </div>
-                              ))}
-                            </div>
-                          </Disclosure.Panel>
-                        </>
-                      )}
-                    </Disclosure>
-                    {/*  end product size categories section */}
                   </form>
                   {/* end of mobile filters */}
                 </Dialog.Panel>
@@ -713,58 +657,7 @@ export default function ProductsFilters() {
                   )}
                 </Disclosure>
                 {/*  end product brand categories section */}
-
-                {/* product size categories  desktop */}
-                <Disclosure
-                  as="div"
-                  key="disclosure"
-                  className="border-t border-gray-200 px-4 py-6"
-                >
-                  {({ open }) => (
-                    <>
-                      <h3 className="-mx-2 -my-3 flow-root">
-                        <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                          <span className="font-medium text-gray-900">
-                            Size
-                          </span>
-                          <span className="ml-6 flex items-center">
-                            {open ? (
-                              <MinusIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <PlusIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            )}
-                          </span>
-                        </Disclosure.Button>
-                      </h3>
-                      <Disclosure.Panel className="pt-6">
-                        <div className="space-y-6">
-                          {sizeCategories.map((option) => (
-                            <div key={option} className="flex items-center">
-                              <input
-                                type="radio"
-                                name="size"
-                                onClick={() => setSize(option)}
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                              />
-                              <label className="ml-3 min-w-0 flex-1 text-gray-500">
-                                {option}
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-                {/*  end product size categories section */}
               </form>
-
               {/* Product grid */}
               {loading ? (
                 <LoadingComponent />

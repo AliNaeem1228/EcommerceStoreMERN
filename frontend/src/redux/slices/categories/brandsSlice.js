@@ -56,6 +56,27 @@ export const fetchBrandsAction = createAsyncThunk(
     }
   }
 );
+
+export const deleteBrandsAction = createAsyncThunk(
+  "brands/delete",
+  async (id, { rejectWithValue, getState }) => {
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.delete(`${baseURL}/brands/${id}`, config);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data || error.message);
+    }
+  }
+);
+
 //slice
 const brandsSlice = createSlice({
   name: "brands",
@@ -101,6 +122,22 @@ const brandsSlice = createSlice({
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
       state.error = null;
+    });
+    //Delete
+    builder.addCase(deleteBrandsAction.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(deleteBrandsAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isDeleted = true;
+      state.brands = state.brands.filter(
+        (brand) => brand._id !== action.meta.arg
+      ); // Remove deleted brand from the state
+    });
+    builder.addCase(deleteBrandsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     });
   },
 });

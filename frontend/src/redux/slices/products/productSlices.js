@@ -163,6 +163,30 @@ export const fetchProductAction = createAsyncThunk(
     }
   }
 );
+
+//delete product action
+export const deleteProductAction = createAsyncThunk(
+  "products/delete",
+  async (id, { rejectWithValue, getState }) => {
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.delete(
+        `${baseURL}/products/${id}/delete`,
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data || error.message);
+    }
+  }
+);
+
 //slice
 const productSlice = createSlice({
   name: "products",
@@ -235,6 +259,18 @@ const productSlice = createSlice({
     //reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
+    });
+    // Delete Product
+    builder.addCase(deleteProductAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteProductAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isDeleted = true;
+    });
+    builder.addCase(deleteProductAction.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     });
   },
 });

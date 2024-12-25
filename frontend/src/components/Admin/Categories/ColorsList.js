@@ -1,21 +1,50 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchColorsAction } from "../../../redux/slices/categories/colorsSlice";
+import Swal from "sweetalert2";
+import {
+  fetchColorsAction,
+  deleteColorsAction,
+} from "../../../redux/slices/categories/colorsSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
 
 export default function ColorsList() {
   const dispatch = useDispatch();
+
+  // Fetch colors on component load
   useEffect(() => {
     dispatch(fetchColorsAction());
   }, [dispatch]);
+
   const {
     colors: { colors },
     loading,
     error,
   } = useSelector((state) => state?.colors);
+
+  // Handle delete with SweetAlert2
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are You Sure, You want to Delete it?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteColorsAction(id)).then(() => {
+          // Re-fetch colors after deletion
+          dispatch(fetchColorsAction());
+        });
+
+        Swal.fire("Deleted!", "The color has been deleted.", "success");
+      }
+    });
+  };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -25,7 +54,8 @@ export default function ColorsList() {
             All Colors Categories [{colors?.length}]
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title,
+            A list of all colors in your account, including their name and
+            creation date.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -58,12 +88,17 @@ export default function ColorsList() {
                       >
                         Name
                       </th>
-
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
                         Created At
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900"
+                      >
+                        Actions
                       </th>
                     </tr>
                   </thead>
@@ -81,6 +116,14 @@ export default function ColorsList() {
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {new Date(color?.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-right text-sm font-medium">
+                          <button
+                            onClick={() => handleDelete(color?._id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     ))}

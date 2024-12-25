@@ -5,7 +5,6 @@ import morgan from "morgan";
 import Stripe from "stripe";
 import express from "express";
 import path from "path";
-import { Server } from "socket.io";
 import dbConnect from "./config/dbConnect.js";
 import { globalErrhandler, notFound } from "./middlewares/globalErrHandler.js";
 import brandsRouter from "./routes/brandsRouter.js";
@@ -101,72 +100,6 @@ app.use(globalErrhandler);
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
-
-const io = new Server(server);
-
-const chatNamespace = io.of("/chat");
-let users = [];
-io.use(cors());
-io.use((socket, next) => {
-  const token = socket.handshake.auth.token;
-  const id = "123456";
-
-  if (!token) {
-    console.log("Authentication failed: No token provided");
-    return next(new Error("Authentication failed"));
-  } else if (token !== id) {
-    console.log("Authentication failed: Invalid token");
-    return next(new Error("Authentication failed"));
-  } else {
-    next();
-  }
-});
-
-chatNamespace.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
-
-  socket.on("login", (data) => {
-    const user = {
-      id: socket.id,
-      name: data.nickname,
-      roomNumber: data.roomNumber,
-    };
-    users.push(user);
-
-    socket.join(data.roomNumber);
-    chatNamespace.to(data.roomNumber).emit(
-      "online",
-      users.filter((u) => u.roomNumber === data.roomNumber)
-    );
-    console.log(`${data.nickname} joined room: ${data.roomNumber}`);
-  });
-
-  socket.on("chat message", (data) => {
-    const date = new Date();
-    let hours = date.getHours().toString().padStart(2, "0");
-    let minutes = date.getMinutes().toString().padStart(2, "0");
-    data.date = `${hours}:${minutes}`;
-
-    chatNamespace.to(data.roomNumber).emit("chat message", data);
-  });
-
-  socket.on("typing", (data) => {
-    socket.to(data.roomNumber).emit("typing", `${data.name} is typing...`);
-  });
-
-  socket.on("disconnect", () => {
-    const index = users.findIndex((u) => u.id === socket.id);
-    if (index !== -1) {
-      const roomNumber = users[index].roomNumber;
-      users.splice(index, 1);
-      chatNamespace.to(roomNumber).emit(
-        "online",
-        users.filter((u) => u.roomNumber === roomNumber)
-      );
-    }
-    console.log(`User disconnected: ${socket.id}`);
-  });
-});
 
 server.listen(PORT, () =>
   console.log(`Server is up and running on port ${PORT}`)

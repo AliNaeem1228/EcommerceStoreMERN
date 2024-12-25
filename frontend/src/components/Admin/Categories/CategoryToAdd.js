@@ -84,6 +84,8 @@ export default function CategoryToAdd() {
                       Add Category
                     </Link>
                   </div>
+                </div>
+                <div>
                   <div>
                     <Link
                       to="/admin/add-size"

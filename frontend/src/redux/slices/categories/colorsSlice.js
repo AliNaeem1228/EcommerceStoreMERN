@@ -56,6 +56,25 @@ export const fetchColorsAction = createAsyncThunk(
     }
   }
 );
+
+export const deleteColorsAction = createAsyncThunk(
+  "colors/delete",
+  async (id, { rejectWithValue, getState }) => {
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await axios.delete(`${baseURL}/colors/${id}`, config);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data || error.message);
+    }
+  }
+);
+
 //slice
 const colorsSlice = createSlice({
   name: "colors",
@@ -102,10 +121,25 @@ const colorsSlice = createSlice({
       state.isAdded = false;
       state.error = null;
     });
+    //delete
+    builder.addCase(deleteColorsAction.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(deleteColorsAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isDeleted = true;
+      state.colors = state.colors.filter(
+        (color) => color._id !== action.meta.arg
+      );
+    });
+    builder.addCase(deleteColorsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
   },
 });
 
-//generate the reducer
 const colorsReducer = colorsSlice.reducer;
 
 export default colorsReducer;

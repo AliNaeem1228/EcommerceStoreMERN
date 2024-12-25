@@ -1,18 +1,46 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchSizeAction } from "../../../redux/slices/categories/sizeSlice";
+import Swal from "sweetalert2";
+import {
+  fetchSizeAction,
+  deleteSizeAction,
+} from "../../../redux/slices/categories/sizeSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
 
 export default function SizeList() {
   const dispatch = useDispatch();
+
+  // Fetch sizes on component load
   useEffect(() => {
     dispatch(fetchSizeAction());
   }, [dispatch]);
 
   const { sizes, loading, error } = useSelector((state) => state?.size);
+
+  // Handle delete action with SweetAlert2
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are You Sure, You want to Delete it?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteSizeAction(id)).then(() => {
+          // Re-fetch sizes after deletion
+          dispatch(fetchSizeAction());
+        });
+
+        Swal.fire("Deleted!", "The size has been deleted.", "success");
+      }
+    });
+  };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -22,7 +50,7 @@ export default function SizeList() {
             All Size Categories [{sizes?.length}]
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all sizes in your account including their name and
+            A list of all sizes in your account, including their name and
             creation date.
           </p>
         </div>
@@ -62,6 +90,12 @@ export default function SizeList() {
                       >
                         Created At
                       </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900"
+                      >
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
@@ -78,6 +112,14 @@ export default function SizeList() {
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {new Date(size?.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-right text-sm font-medium">
+                          <button
+                            onClick={() => handleDelete(size?._id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     ))}
