@@ -136,11 +136,10 @@ export const verifyOtp = async (req, res) => {
       );
       return res.json({
         status: "success",
-        message: "User logged in successfully",
+        message: "User verified in successfully",
         userFound,
         token: generateToken(userFound?._id),
         verified: userFound.isVerified,
-        isAdmin: userFound.isAdmin,
         _id: userFound._id,
       });
     }

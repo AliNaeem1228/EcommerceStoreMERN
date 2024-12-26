@@ -24,7 +24,9 @@ const Login = () => {
     console.log("login data  ==", login?.payload?.verified);
     if (!login?.payload?.verified) {
       console.log("login?.payload?.user?._id == ", login?.payload?.user?._id);
-      navigate(`/send-otp/${login?.payload?.user?._id}`);
+      if(login?.payload?.user?._id){
+        navigate(`/send-otp/${login?.payload?.user?._id}`);
+      }
     }
   };
 

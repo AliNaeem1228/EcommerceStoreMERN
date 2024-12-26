@@ -147,6 +147,28 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
+//Verify OTP
+export const verifyOtpAction = createAsyncThunk(
+  "users/verify-otp",
+  async ({ _id, otp }, { rejectWithValue }) => {
+    try {
+      console.log("createAsyncThunk ==")
+      const { data } = await axios.post(`${baseURL}/users/verify-otp`, {
+        userId: _id,
+        otp,
+      });
+      console.log("On verify otp data --",data)
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      window.location.reload();
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to verify OTP"
+      );
+    }
+  }
+);
+
 //logout action
 export const logoutAction = createAsyncThunk(
   "users/logout",
@@ -170,28 +192,6 @@ export const sendOtpAction = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to send OTP"
-      );
-    }
-  }
-);
-
-//Verify OTP
-export const verifyOtpAction = createAsyncThunk(
-  "users/verify-otp",
-  async ({ _id, otp }, { rejectWithValue }) => {
-    try {
-      const navigate = useNavigate();
-      const { data } = await axios.post(`${baseURL}/users/verify-otp`, {
-        userId: _id,
-        otp,
-      });
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      navigate("/");
-      window.location.reload();
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to verify OTP"
       );
     }
   }
@@ -293,7 +293,8 @@ const usersSlice = createSlice({
     });
     builder.addCase(verifyOtpAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.isVerified = action.payload.isVerified; // Ensure backend returns this field
+      state.isVerified = action.payload.isVerified; // Assuming backend sends this field
+      state.userAuth.userInfo = action.payload; // Save authenticated user data
       state.success = true;
       state.error = null;
     });

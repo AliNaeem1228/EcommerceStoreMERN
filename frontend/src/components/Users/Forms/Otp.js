@@ -23,16 +23,18 @@ const SendOtp = () => {
     dispatch(sendOtpAction(user_id));
   };
 
-  const handleVerifyOtp = () => {
+  const handleVerifyOtp = async() => {
     if (!user_id || !otp) {
       console.error("Error: Missing User ID or OTP.");
       return;
     }
     console.log("Verifying OTP for user_id:", user_id, "OTP:", otp);
 
-    dispatch(verifyOtpAction({ _id: user_id, otp }));
-
-    // navigate("/");
+   const verified  = await  dispatch(verifyOtpAction({ _id: user_id, otp }));
+    console.log("verified == ",verified)
+    if(verified){
+      window.location.href = '/';
+    }
   };
 
   const handleOtpChange = (e) => {
