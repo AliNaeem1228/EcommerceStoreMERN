@@ -26,7 +26,7 @@ export default function Navbar() {
 
   const { categories } = useSelector((state) => state?.categories);
 
-  const categoriesToDisplay = categories?.categories?.slice(0, 3);
+  const categoriesToDisplay = categories?.categories?.slice(0, 5);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

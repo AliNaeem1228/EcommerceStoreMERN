@@ -143,10 +143,12 @@ const couponsSlice = createSlice({
     });
     builder.addCase(createCouponAction.fulfilled, (state, action) => {
       state.loading = false;
+      state.isAdded = true;
       state.coupon = action.payload;
     });
     builder.addCase(createCouponAction.rejected, (state, action) => {
       state.loading = false;
+      state.isAdded = false;
       state.coupon = null;
       state.error = action.payload;
     });
