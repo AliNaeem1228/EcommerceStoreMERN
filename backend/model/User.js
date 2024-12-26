@@ -33,7 +33,7 @@ const UserShema = new Schema(
     },
     isVerified: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     hasShippingAddress: {
       type: Boolean,

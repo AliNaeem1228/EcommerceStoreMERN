@@ -33,10 +33,11 @@ const Login = () => {
   );
 
   useEffect(() => {
-    if (userInfo?.userFound) {
+    if (userInfo?.userFound?.isVerified) {
       window.location.href = "/";
     }
   }, [userInfo]);
+
   return (
     <>
       <section className="py-20 bg-gray-100 overflow-x-hidden">

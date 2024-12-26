@@ -6,6 +6,8 @@ import {
   resetErrAction,
   resetSuccessAction,
 } from "../globalActions/globalActions";
+import { useNavigate } from "react-router-dom";
+
 //initialState
 const initialState = {
   loading: false,
@@ -137,7 +139,7 @@ export const loginUserAction = createAsyncThunk(
 
       //save the user into localstorage
       localStorage.setItem("userInfo", JSON.stringify(data));
-      return data
+      return data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error?.response?.data);
@@ -178,11 +180,15 @@ export const verifyOtpAction = createAsyncThunk(
   "users/verify-otp",
   async ({ _id, otp }, { rejectWithValue }) => {
     try {
+      const navigate = useNavigate();
       const { data } = await axios.post(`${baseURL}/users/verify-otp`, {
         userId: _id,
         otp,
       });
-      return data; // Success payload
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      navigate("/");
+      window.location.reload();
+      return data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to verify OTP"

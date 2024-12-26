@@ -4,11 +4,12 @@ import {
   sendOtpAction,
   verifyOtpAction,
 } from "../../../redux/slices/users/usersSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import OtpInput from "react-otp-input";
 
 const SendOtp = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const { loading, error, success } = useSelector((state) => state?.users);
   const { user_id } = useParams();
@@ -28,7 +29,10 @@ const SendOtp = () => {
       return;
     }
     console.log("Verifying OTP for user_id:", user_id, "OTP:", otp);
+
     dispatch(verifyOtpAction({ _id: user_id, otp }));
+
+    // navigate("/");
   };
 
   const handleOtpChange = (e) => {
@@ -41,19 +45,21 @@ const SendOtp = () => {
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
           Send OTP
         </h1>
-
-        <OtpInput
-          value={otp}
-          onChange={handleOtpChange}
-          numInputs={4}
-          renderSeparator={<span className="text-gray-500 mx-2">-</span>}
-          renderInput={(props) => (
-            <input
-              {...props}
-              className="w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          )}
-        />
+        <div className="flex justify-center">
+          <OtpInput
+            value={otp}
+            onChange={handleOtpChange}
+            numInputs={4}
+            renderSeparator={<span className="text-gray-500 mx-2">-</span>}
+            renderInput={(props) => (
+              <input
+                {...props}
+                style={{ width: "3em" }}
+                className="w-12 h-12 font-bold text-center  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            )}
+          />
+        </div>
 
         <div className="mt-6 text-center">
           {loading && <p className="text-blue-500">Processing...</p>}

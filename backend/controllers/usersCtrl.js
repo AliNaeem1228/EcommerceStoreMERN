@@ -48,7 +48,6 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
         userFound,
         token: generateToken(userFound?._id),
         verified: userFound.isVerified,
-        isAdmin: userFound.isAdmin,
         _id: userFound._id,
       });
     }
@@ -130,12 +129,20 @@ export const verifyOtp = async (req, res) => {
       (await bcrypt.compare(req.body.otp, isOtpExisting.otp))
     ) {
       await Otp.findByIdAndDelete(isOtpExisting._id);
-      const verifiedUser = await User.findByIdAndUpdate(
+      const userFound = await User.findByIdAndUpdate(
         isValidUserId._id,
         { isVerified: true },
         { new: true }
       );
-      return res.status(200).json({ message: "User Successfully Verified" });
+      return res.json({
+        status: "success",
+        message: "User logged in successfully",
+        userFound,
+        token: generateToken(userFound?._id),
+        verified: userFound.isVerified,
+        isAdmin: userFound.isAdmin,
+        _id: userFound._id,
+      });
     }
 
     return res.status(400).json({ message: "Otp is invalid or expired" });
