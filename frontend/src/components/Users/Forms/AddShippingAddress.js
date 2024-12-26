@@ -6,12 +6,10 @@ import {
 } from "../../../redux/slices/users/usersSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
-import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 
 const AddShippingAddress = () => {
-  //dispatch
   const dispatch = useDispatch();
-  //user profile
+
   useEffect(() => {
     dispatch(getUserProfileAction());
   }, [dispatch]);
@@ -28,12 +26,11 @@ const AddShippingAddress = () => {
     postalCode: "",
     phone: "",
   });
-  //onchange
+
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //onsubmit
   const onSubmit = (e) => {
     console.log(formData);
     e.preventDefault();
@@ -43,7 +40,6 @@ const AddShippingAddress = () => {
   return (
     <>
       {error && <ErrorMsg message={error?.message} />}
-      {/* shipping details */}
       {user?.hasShippingAddress ? (
         <div className="mt-6">
           <h3 className="text-lg font-medium text-gray-900">

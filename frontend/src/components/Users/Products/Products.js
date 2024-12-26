@@ -1,26 +1,98 @@
 import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addOrderToCartaction,
+  getCartItemsFromLocalStorageAction,
+} from "../../../redux/slices/cart/cartSlices";
+import { createWishlistAction } from "../../../redux/slices/wishlist/wishlistSlice";
 
 const Products = ({ products }) => {
+  const dispatch = useDispatch();
+
+  // Fetch cart items from local storage
+  React.useEffect(() => {
+    dispatch(getCartItemsFromLocalStorageAction());
+  }, [dispatch]);
+
+  const { cartItems } = useSelector((state) => state?.carts);
+
+  const handleAddToCart = (product) => {
+    const productExists = cartItems?.find(
+      (item) => item?._id?.toString() === product?._id.toString()
+    );
+
+    if (productExists) {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "This product is already in cart",
+      });
+    }
+
+    dispatch(
+      addOrderToCartaction({
+        _id: product?._id,
+        name: product?.name,
+        qty: 1,
+        price: product?.price,
+        description: product?.description,
+        image: product?.images[0],
+        totalPrice: product?.price,
+        qtyLeft: product?.qtyLeft,
+      })
+    );
+    Swal.fire({
+      icon: "success",
+      title: "Good Job",
+      text: "Product added to cart successfully",
+    });
+    dispatch(getCartItemsFromLocalStorageAction());
+  };
+
+  const handleAddToWishlist = (product) => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userInfo?._id;
+
+    if (!userId) {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "You need to log in to add items to your wishlist.",
+      });
+    }
+
+    dispatch(createWishlistAction({ userId, productId: product?._id }))
+      .unwrap()
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Product added to wishlist successfully.",
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error || "Failed to add the product to your wishlist.",
+        });
+      });
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:col-span-3 lg:gap-x-8">
         {products?.map((product) => (
           <>
-            {/* new */}
             <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
               <div className="relative bg-gray-50">
-                {/* <span className="absolute top-0 left-0 ml-6 mt-6 px-2 py-1 text-xs font-bold font-heading bg-white border-2 border-red-500 rounded-full text-red-500">
-                  -15%
-                </span> */}
                 <Link
                   className="block"
                   to={{
-                    pathname: `/products/${product?.id}`,
-                    // state: {
-                    //   product: product,
-                    // },
+                    pathname: `/products/${product?._id}`,
                   }}
                 >
                   <img
@@ -36,24 +108,21 @@ const Products = ({ products }) => {
                     </h3>
                     <p className="text-lg font-bold font-heading text-blue-500">
                       <span>${product?.price}</span>
-                      <span className="text-xs text-gray-500 font-semibold font-heading line-through">
-                        {/* $40.99 */}
-                      </span>
                     </p>
                   </a>
                   <div className="flex flex-row justify-end gap-3">
-                    <a
+                    <button
+                      onClick={() => handleAddToCart(product)}
                       className="flex items-center justify-center w-12 h-12 bg-blue-300 hover:bg-blue-400 rounded-md text-white font-bold text-2xl"
-                      href="#"
                     >
-                      <ShoppingCartIcon />
-                    </a>
-                    <a
+                      <ShoppingCartIcon className="w-6 h-6" />
+                    </button>
+                    <button
+                      onClick={() => handleAddToWishlist(product)}
                       className="flex items-center justify-center w-12 h-12 bg-red-300 hover:bg-red-400 rounded-md text-white font-bold text-2xl"
-                      href="#"
                     >
-                      <HeartIcon />
-                    </a>
+                      <HeartIcon className="w-6 h-6" />
+                    </button>
                   </div>
                 </div>
               </div>

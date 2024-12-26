@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
+import { Dialog, Popover, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   ShoppingCartIcon,
@@ -10,7 +10,6 @@ import {
   ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import baseURL from "../../utils/baseURL";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategoriesAction } from "../../redux/slices/categories/categoriesSlice";
 import { getCartItemsFromLocalStorageAction } from "../../redux/slices/cart/cartSlices";
@@ -20,64 +19,57 @@ import { getWishlistAction } from "../../redux/slices/wishlist/wishlistSlice";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchCategoriesAction());
   }, [dispatch]);
-  //get data from store
+
   const { categories } = useSelector((state) => state?.categories);
 
   const categoriesToDisplay = categories?.categories?.slice(0, 3);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  //get data from store
+
   useEffect(() => {
     dispatch(getCartItemsFromLocalStorageAction());
   }, [dispatch]);
   const { cartItems } = useSelector((state) => state?.carts);
-  //get cart items from local storage
-  let cartItemsFromLocalStorage;
-  //get login user from localstorage
 
   const user = JSON.parse(localStorage.getItem("userInfo"));
 
   const isLoggedIn = user?.token ? true : false;
-  //logout handler
+
   const logoutHandler = () => {
     dispatch(logoutAction());
     navigate("/");
-    //reload
+
     window.location.reload();
   };
-  //coupons
+
   useEffect(() => {
     dispatch(fetchCouponsAction());
   }, [dispatch]);
-  //get coupons
-  const { coupons, loading, error } = useSelector((state) => state?.coupons);
-  //Get current coupon
+
+  const { coupons } = useSelector((state) => state?.coupons);
+
   const currentCoupon = coupons
     ? coupons?.coupons?.[coupons?.coupons?.length - 1]
     : console.log(currentCoupon);
-  //wishlist
+
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userInfo?._id;
 
     if (userId) {
-      dispatch(getWishlistAction({ userId })); // Fetch wishlist items on component mount
+      dispatch(getWishlistAction({ userId }));
     }
   }, [dispatch]);
 
-  // Access wishlist data from Redux store
   const { wishlist } = useSelector((state) => state.wishlist);
 
-  // Wishlist count
   const wishlistCount = wishlist?.length || 0;
   return (
     <div className="bg-white">
-      {/* Mobile menu */}
       <Transition.Root show={mobileMenuOpen} as={Fragment}>
         <Dialog
           as="div"
@@ -117,17 +109,7 @@ export default function Navbar() {
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
-                {/* mobile category menu links */}
                 <div className="space-y-6 border-t border-gray-200 py-6 px-4">
-                  {/* {navigation.pages.map((page) => (
-                    <div key={page.name} className="flow-root">
-                      <a
-                        href={page.href}
-                        className="-m-2 block p-2 font-medium text-gray-900">
-                        {page.name}
-                      </a>
-                    </div>
-                  ))} */}
                   {categoriesToDisplay?.length <= 0 ? (
                     <>
                       <Link
@@ -168,7 +150,6 @@ export default function Navbar() {
                   )}
                 </div>
 
-                {/* mobile links register/login */}
                 <div className="space-y-6 border-t border-gray-200 py-6 px-4">
                   {!isLoggedIn && (
                     <>
@@ -201,7 +182,6 @@ export default function Navbar() {
 
       <header className="relative z-10">
         <nav aria-label="Top">
-          {/* Coupon navbar */}
           {!currentCoupon?.isExpired && (
             <div className="bg-yellow-600">
               <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -218,7 +198,7 @@ export default function Navbar() {
               </div>
             </div>
           )}
-          {/* Top navigation  desktop*/}
+
           {!isLoggedIn && (
             <div className="bg-gray-800">
               <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -247,12 +227,11 @@ export default function Navbar() {
               </div>
             </div>
           )}
-          {/* Deskto Navigation */}
+
           <div className="bg-white">
             <div className="border-b border-gray-200">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
-                  {/* Logo (lg+) */}
                   <div className="hidden lg:flex lg:items-center">
                     <Link to="/">
                       <span className="sr-only">Your Company</span>
@@ -265,7 +244,6 @@ export default function Navbar() {
                   </div>
 
                   <div className="hidden h-full lg:flex">
-                    {/*  menus links*/}
                     <Popover.Group className="ml-8">
                       <div className="flex h-full justify-center space-x-8">
                         {categoriesToDisplay?.length <= 0 ? (
@@ -310,7 +288,6 @@ export default function Navbar() {
                     </Popover.Group>
                   </div>
 
-                  {/* Mobile Naviagtion */}
                   <div className="flex flex-1 items-center lg:hidden">
                     <button
                       type="button"
@@ -321,7 +298,7 @@ export default function Navbar() {
                       <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                     </button>
                   </div>
-                  {/* logo */}
+
                   <Link to="/" className="lg:hidden">
                     <img
                       className="h-32 mt-2 w-auto"
@@ -330,7 +307,6 @@ export default function Navbar() {
                     />
                   </Link>
 
-                  {/* login profile icon mobile */}
                   <div className="flex flex-1 items-center justify-end">
                     {user?.userFound?.isAdmin && (
                       <Link
@@ -362,7 +338,7 @@ export default function Navbar() {
                                 aria-hidden="true"
                               />
                             </Link>
-                            {/* logout */}
+
                             <button onClick={logoutHandler}>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -386,7 +362,7 @@ export default function Navbar() {
                         className="mx-4 h-6 w-px bg-gray-200 lg:mx-6"
                         aria-hidden="true"
                       />
-                      {/* login shopping cart mobile */}
+
                       <div className="flow-root">
                         <Link
                           to="/shopping-cart"
@@ -401,7 +377,7 @@ export default function Navbar() {
                           </span>
                         </Link>
                       </div>
-                      {/* Wishlist Icon */}
+
                       <div className="flow-root">
                         <Link
                           to="/wishlist"

@@ -5,26 +5,14 @@ import { fetchOrdersAction } from "../../../redux/slices/orders/ordersSlices";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
-import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 import OrdersStats from "./OrdersStatistics";
 
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-  },
-  // More people...
-];
-
 export default function OrdersList() {
-  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchOrdersAction());
   }, [dispatch]);
-  //get data from store
+
   const {
     error,
     loading,
@@ -36,7 +24,7 @@ export default function OrdersList() {
       {error && <ErrorMsg message={error?.message} />}
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center"></div>
-        {/* order stats */}
+
         <OrdersStats />
 
         <h3 className="text-lg font-medium leading-6 text-gray-900 mt-3">
@@ -83,9 +71,6 @@ export default function OrdersList() {
                 >
                   Total
                 </th>
-                {/* <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                <span className="sr-only">Edit</span>
-              </th> */}
               </tr>
             </thead>
             {loading ? (
@@ -121,21 +106,12 @@ export default function OrdersList() {
                       {order?.totalPrice}
                     </td>
                     <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      {order?.paymentStatus === "Not paid" ? (
-                        <Link
-                          style={{ cursor: "not-allowed" }}
-                          className="text-gray-300"
-                        >
-                          Edit
-                        </Link>
-                      ) : (
-                        <Link
-                          to={`/admin/orders/${order?._id}`}
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          Edit
-                        </Link>
-                      )}
+                      <Link
+                        to={`/admin/orders/${order?._id}`}
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
+                        Edit
+                      </Link>
                     </td>
                   </tr>
                 ))}

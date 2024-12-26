@@ -151,6 +151,14 @@ const colorsLinks = [
   },
 ];
 
+const sizeLinks = [
+  {
+    name: "All Sizes",
+    href: "all-sizes",
+    icon: QuestionMarkCircleIcon,
+  },
+];
+
 const brandsLinks = [
   {
     name: "All Brands",
@@ -227,7 +235,6 @@ export default function AddminDashboard() {
                     className="mt-5 flex flex-1 flex-col divide-y divide-cyan-800 overflow-y-auto"
                     aria-label="Sidebar"
                   >
-                    {/* orders links mobile */}
                     <div className="mt-1 pt-1">
                       <div className="space-y-1 px-2">
                         {ordersLinks.map((item) => (
@@ -246,7 +253,6 @@ export default function AddminDashboard() {
                       </div>
                     </div>
                     <div className="space-y-1 px-2 mt-8">
-                      {/*Products  links mobile */}
                       {productsLinks.map((item) => (
                         <Link
                           key={item.name}
@@ -284,7 +290,6 @@ export default function AddminDashboard() {
                         ))}
                       </div>
                     </div>
-                    {/* Categories mobile */}
                     <div className="mt-3 pt-3">
                       <div className="space-y-1 px-2">
                         {CategoryLinks.map((item) => (
@@ -302,7 +307,6 @@ export default function AddminDashboard() {
                         ))}
                       </div>
                     </div>
-                    {/* colors links mobile */}
                     <div className="mt-3 pt-3">
                       <div className="space-y-1 px-2">
                         {colorsLinks.map((item) => (
@@ -320,7 +324,23 @@ export default function AddminDashboard() {
                         ))}
                       </div>
                     </div>
-                    {/* brands links mobile */}
+                    <div className="mt-3 pt-3">
+                      <div className="space-y-1 px-2">
+                        {sizeLinks.map((item) => (
+                          <Link
+                            key={item.name}
+                            to={item.href}
+                            className="group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6 text-cyan-100 hover:bg-cyan-600 hover:text-white"
+                          >
+                            <item.icon
+                              className="mr-4 h-6 w-6 text-cyan-200"
+                              aria-hidden="true"
+                            />
+                            {item.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                     <div className="mt-3 pt-3">
                       <div className="space-y-1 px-2">
                         {brandsLinks.map((item) => (
@@ -339,25 +359,19 @@ export default function AddminDashboard() {
                       </div>
                     </div>
                   </nav>
-                  {/* end of mobile nav */}
                 </Dialog.Panel>
               </Transition.Child>
-              <div className="w-14 flex-shrink-0" aria-hidden="true">
-                {/* Dummy element to force sidebar to shrink to fit close icon */}
-              </div>
+              <div className="w-14 flex-shrink-0" aria-hidden="true"></div>
             </div>
           </Dialog>
         </Transition.Root>
 
-        {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex flex-grow flex-col overflow-y-auto bg-cyan-900 pt-32 pb-4">
             <nav
               className="mt-5 flex flex-1 flex-col divide-y divide-cyan-800 overflow-y-auto"
               aria-label="Sidebar"
             >
-              {/* orders links desktop */}
               <div className="mt-1 pt-1">
                 <div className="space-y-1 px-2">
                   {ordersLinks.map((item) => (
@@ -376,7 +390,6 @@ export default function AddminDashboard() {
                 </div>
               </div>
               <div className="space-y-1 px-2 mt-8">
-                {/*Products  links desktop */}
                 {productsLinks.map((item) => (
                   <Link
                     key={item.name}
@@ -414,7 +427,6 @@ export default function AddminDashboard() {
                   ))}
                 </div>
               </div>
-              {/* Categories desktop */}
               <div className="mt-3 pt-3">
                 <div className="space-y-1 px-2">
                   {CategoryLinks.map((item) => (
@@ -432,7 +444,6 @@ export default function AddminDashboard() {
                   ))}
                 </div>
               </div>
-              {/* colors links desktop */}
               <div className="mt-3 pt-3">
                 <div className="space-y-1 px-2">
                   {colorsLinks.map((item) => (
@@ -450,7 +461,23 @@ export default function AddminDashboard() {
                   ))}
                 </div>
               </div>
-              {/* brands links desktop */}
+              <div className="mt-3 pt-3">
+                <div className="space-y-1 px-2">
+                  {sizeLinks.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className="group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6 text-cyan-100 hover:bg-cyan-600 hover:text-white"
+                    >
+                      <item.icon
+                        className="mr-4 h-6 w-6 text-cyan-200"
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
               <div className="mt-3 pt-3">
                 <div className="space-y-1 px-2">
                   {brandsLinks.map((item) => (
@@ -484,12 +511,10 @@ export default function AddminDashboard() {
             </button>
           </div>
           <main className="flex-1 pb-8">
-            {/* Page header */}
             <div className="bg-white shadow">
               <div className="px-4 sm:px-6 lg:mx-auto lg:max-w-6xl lg:px-8">
                 <div className="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
                   <div className="min-w-0 flex-1">
-                    {/* Profile */}
                     <AdminDetails
                       email={profile?.user?.email}
                       dateJoined={new Date(
@@ -498,23 +523,10 @@ export default function AddminDashboard() {
                       name={profile?.user?.name}
                     />
                   </div>
-                  {/* <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
-                      Add money
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
-                      Send money
-                    </button>
-                  </div> */}
                 </div>
               </div>
             </div>
             <Outlet />
-            {/* content */}
           </main>
         </div>
       </div>

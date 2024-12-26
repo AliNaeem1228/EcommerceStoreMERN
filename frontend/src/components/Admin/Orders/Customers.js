@@ -1,21 +1,18 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrdersAction } from "../../../redux/slices/orders/ordersSlices";
-import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
 
 export default function Customers() {
-  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchOrdersAction());
   }, [dispatch]);
-  //get data from store
-  const { error, loading, orders } = useSelector((state) => state?.orders);
+
+  const { loading, orders } = useSelector((state) => state?.orders);
   const customers = orders?.orders;
 
-  //remove duplicates
   const uniqueCustomers = customers?.filter((item, idx) => {
     return customers?.map((customer) => customer?.id).indexOf(item.id) === idx;
   });
@@ -73,9 +70,6 @@ export default function Customers() {
                 >
                   Postal Code
                 </th>
-                {/* <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                <span className="sr-only">Edit</span>
-              </th> */}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">

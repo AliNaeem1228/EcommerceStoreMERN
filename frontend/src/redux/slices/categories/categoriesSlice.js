@@ -61,6 +61,54 @@ export const fetchCategoriesAction = createAsyncThunk(
     }
   }
 );
+
+// Update Category Action
+export const updateCategoriesAction = createAsyncThunk(
+  "categories/update",
+  async ({ id, name }, { rejectWithValue, getState }) => {
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        `${baseURL}/categories/${id}`,
+        { name },
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data || error.message);
+    }
+  }
+);
+
+// Delete Category Action
+export const deleteCategoriesAction = createAsyncThunk(
+  "categories/delete",
+  async (id, { rejectWithValue, getState }) => {
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.delete(
+        `${baseURL}/categories/${id}`,
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data || error.message);
+    }
+  }
+);
+
 //slice
 const categorySlice = createSlice({
   name: "categories",
@@ -102,6 +150,31 @@ const categorySlice = createSlice({
     //Reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
+    });
+    // Update Category
+    builder.addCase(updateCategoriesAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateCategoriesAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isUpdated = true;
+    });
+    builder.addCase(updateCategoriesAction.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Delete Category
+    builder.addCase(deleteCategoriesAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteCategoriesAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isDeleted = true;
+    });
+    builder.addCase(deleteCategoriesAction.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     });
   },
 });

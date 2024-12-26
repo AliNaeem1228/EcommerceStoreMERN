@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { createBrandAction } from "../../../redux/slices/categories/brandsSlice";
+import {
+  createBrandAction,
+  resetBrandState,
+} from "../../../redux/slices/categories/brandsSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 
 export default function AddBrand() {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
-    name: "",
-  });
+  const [formData, setFormData] = useState({ name: "" });
+
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -18,11 +20,25 @@ export default function AddBrand() {
   const handleOnSubmit = (e) => {
     e.preventDefault();
     dispatch(createBrandAction(formData?.name));
-    setFormData({
-      name: "",
-    });
+    setFormData({ name: "" });
   };
+
   const { error, loading, isAdded } = useSelector((state) => state?.brands);
+
+  // Reset state after showing success/error messages
+  useEffect(() => {
+    if (isAdded || error) {
+      setTimeout(() => {
+        dispatch(resetBrandState());
+      }, 100); // Ensure modal visibility before resetting
+    }
+  }, [isAdded, error, dispatch]);
+
+  // Debug Redux state changes (optional, for troubleshooting)
+  useEffect(() => {
+    console.log("Redux State - isAdded:", isAdded);
+    console.log("Redux State - error:", error);
+  }, [isAdded, error]);
 
   return (
     <>
@@ -55,7 +71,7 @@ export default function AddBrand() {
             <form className="space-y-6" onSubmit={handleOnSubmit}>
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Name
@@ -95,15 +111,6 @@ export default function AddBrand() {
 
               <div className="mt-6 grid grid-cols-3 gap-3">
                 <div>
-                  <Link
-                    to="/admin/add-brand"
-                    className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
-                  >
-                    Add Brand
-                  </Link>
-                </div>
-
-                <div>
                   <div>
                     <Link
                       to="/admin/add-color"
@@ -121,6 +128,16 @@ export default function AddBrand() {
                       className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                     >
                       Add Category
+                    </Link>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <Link
+                      to="/admin/add-size"
+                      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
+                    >
+                      Add Size
                     </Link>
                   </div>
                 </div>

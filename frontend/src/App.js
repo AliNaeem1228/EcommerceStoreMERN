@@ -34,8 +34,9 @@ import ProductUpdate from "./components/Admin/Products/ProuductUpdate";
 import UpdateOrders from "./components/Admin/Orders/UpdateOrders";
 import ColorsList from "./components/Admin/Categories/ColorsList";
 import SendOtp from "./components/Users/Forms/Otp";
-import VerifyOtp from "./components/Users/Forms/verifyOtp";
 import Wishlist from "./components/Users/Products/Wishlist";
+import AddSize from "./components/Admin/Categories/AddSize";
+import SizeList from "./components/Admin/Categories/SizeList";
 import Chat from "./components/Chat/Chat";
 
 const App = () => {
@@ -151,6 +152,16 @@ const App = () => {
             }
           />
           <Route path="all-colors" element={<ColorsList />} />
+          {/* size category */}
+          <Route
+            path="add-size"
+            element={
+              <AdminRoutes>
+                <AddSize />
+              </AdminRoutes>
+            }
+          />
+          <Route path="all-sizes" element={<SizeList />} />
           {/* Orders */}
           <Route path="manage-orders" element={<ManageOrders />} />
           <Route
@@ -221,7 +232,6 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/send-otp/:user_id" element={<SendOtp />} />
-        <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route
           path="/customer-profile"
           element={

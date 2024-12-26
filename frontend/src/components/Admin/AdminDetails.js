@@ -5,25 +5,14 @@ function classNames(...classes) {
 export default function AdminDetails({ email, dateJoined, name }) {
   return (
     <div className="flex items-center">
-      {/* <img
-        className="hidden h-16 w-16 rounded-full sm:block"
-        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-        alt=""
-      /> */}
       <div>
         <div className="flex items-center">
-          {/* <img
-            className="h-16 w-16 rounded-full sm:hidden"
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-            alt=""
-          /> */}
           <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
             Good morning, {name}
           </h1>
         </div>
         <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
           <dd className="flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6">
-            {/* Role */}
             <svg
               class="w-6 h-6"
               fill="none"
@@ -40,7 +29,6 @@ export default function AdminDetails({ email, dateJoined, name }) {
             </svg>
             Role: Admin
           </dd>
-          {/* Date Joined */}
           <dd className="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6 sm:mt-0">
             <svg
               className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
@@ -58,7 +46,6 @@ export default function AdminDetails({ email, dateJoined, name }) {
             </svg>
             Date Joined: {dateJoined}
           </dd>
-          {/* email */}
           <dd className="mt-3 flex items-center text-sm font-medium  text-gray-500 sm:mr-6 sm:mt-0">
             <svg
               className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"

@@ -54,7 +54,6 @@ export default function Example() {
   return (
     <div className="bg-white">
       <main>
-        {/* Hero */}
         <div className="flex flex-col border-b border-gray-200 lg:border-0">
           <nav aria-label="Offers" className="order-last lg:order-first">
             <div className="mx-auto max-w-7xl lg:px-8">
@@ -117,7 +116,6 @@ export default function Example() {
         </div>
 
         <div className="relative overflow-hidden">
-          {/* Sale */}
           <section
             aria-labelledby="sale-heading"
             className="relative mx-auto flex max-w-7xl flex-col items-center px-4 pt-32 text-center sm:px-6 lg:px-8"
@@ -144,7 +142,6 @@ export default function Example() {
         </div>
       </main>
       <main>
-        {/* Category section */}
         <section
           aria-labelledby="category-heading"
           className="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8"
@@ -164,13 +161,10 @@ export default function Example() {
               <span aria-hidden="true"> &rarr;</span>
             </Link>
           </div>
-          {/* home categories */}
           <HomeCategories />
         </section>
-        {/* Home trending trending */}
         <HomeProductTrending />
 
-        {/* info */}
         <section
           aria-labelledby="perks-heading"
           className="border-t border-gray-200 bg-gray-50"

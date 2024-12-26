@@ -1,34 +1,29 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import {
-  fetchCategoriesAction,
-  deleteCategoriesAction,
-} from "../../../redux/slices/categories/categoriesSlice";
-
+  fetchSizeAction,
+  deleteSizeAction,
+} from "../../../redux/slices/categories/sizeSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
 
-export default function ManageCategories() {
+export default function SizeList() {
   const dispatch = useDispatch();
 
-  // Fetch categories on component load
+  // Fetch sizes on component load
   useEffect(() => {
-    dispatch(fetchCategoriesAction());
+    dispatch(fetchSizeAction());
   }, [dispatch]);
 
-  const {
-    categories: { categories },
-    loading,
-    error,
-  } = useSelector((state) => state?.categories);
+  const { sizes, loading, error } = useSelector((state) => state?.size);
 
-  // Handle delete with SweetAlert2
+  // Handle delete action with SweetAlert2
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Are You Sure, You want to Delete this category?",
+      title: "Are You Sure, You want to Delete it?",
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -37,12 +32,12 @@ export default function ManageCategories() {
       confirmButtonText: "Yes",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(deleteCategoriesAction(id)).then(() => {
-          // Re-fetch categories after deletion
-          dispatch(fetchCategoriesAction());
+        dispatch(deleteSizeAction(id)).then(() => {
+          // Re-fetch sizes after deletion
+          dispatch(fetchSizeAction());
         });
 
-        Swal.fire("Deleted!", "The category has been deleted.", "success");
+        Swal.fire("Deleted!", "The size has been deleted.", "success");
       }
     });
   };
@@ -52,20 +47,20 @@ export default function ManageCategories() {
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">
-            All Categories
+            All Size Categories [{sizes?.length}]
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the categories in your account, including their name,
-            product count, and creation date.
+            A list of all sizes in your account, including their name and
+            creation date.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <Link
-            to="/admin/add-category"
+            to="/admin/add-size"
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
           >
-            Add New Category
+            Add New Size
           </Link>
         </div>
       </div>
@@ -73,7 +68,7 @@ export default function ManageCategories() {
         <LoadingComponent />
       ) : error ? (
         <ErrorMsg message={error?.message} />
-      ) : categories?.length <= 0 ? (
+      ) : sizes?.length <= 0 ? (
         <NoDataFound />
       ) : (
         <div className="mt-8 flex flex-col">
@@ -93,12 +88,6 @@ export default function ManageCategories() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        No. Products
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
                         Created At
                       </th>
                       <th
@@ -110,35 +99,23 @@ export default function ManageCategories() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {categories?.map((category) => (
-                      <tr key={category?._id}>
+                    {sizes?.map((size) => (
+                      <tr key={size?._id}>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                           <div className="flex items-center">
-                            <div className="h-10 w-10 flex-shrink-0">
-                              <img
-                                className="h-10 w-10 rounded-full"
-                                src={category?.image}
-                                alt={category?.name}
-                              />
-                            </div>
                             <div className="ml-4">
                               <div className="font-medium text-gray-900">
-                                {category?.name}
+                                {size?.name}
                               </div>
                             </div>
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          <div className="text-gray-900">
-                            {category?.products?.length}
-                          </div>
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {new Date(category?.createdAt).toLocaleDateString()}
+                          {new Date(size?.createdAt).toLocaleDateString()}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-right text-sm font-medium">
                           <button
-                            onClick={() => handleDelete(category?._id)}
+                            onClick={() => handleDelete(size?._id)}
                             className="text-red-600 hover:text-red-900"
                           >
                             Delete

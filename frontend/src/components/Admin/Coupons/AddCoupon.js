@@ -8,7 +8,6 @@ import { createCouponAction } from "../../../redux/slices/coupons/couponsSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function AddCoupon() {
-  //dispatch
   const dispatch = useDispatch();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -18,11 +17,10 @@ export default function AddCoupon() {
     discount: "",
   });
 
-  //---onHandleChange---
   const onHandleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  //---onHandleSubmit---
+
   const onHandleSubmit = (e) => {
     e.preventDefault();
     dispatch(
@@ -33,13 +31,13 @@ export default function AddCoupon() {
         endDate,
       })
     );
-    //reset form
+
     setFormData({
       code: "",
       discount: "",
     });
   };
-  //---coupon from store---
+
   const { loading, isAdded, error, coupon } = useSelector(
     (state) => state?.coupons
   );
@@ -64,7 +62,6 @@ export default function AddCoupon() {
           <form className="space-y-6" onSubmit={onHandleSubmit}>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                {/* name */}
                 Name
               </label>
               <div className="mt-1">
@@ -79,7 +76,6 @@ export default function AddCoupon() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                {/* discount */}
                 Discount (in %)
               </label>
               <div className="mt-1">
@@ -92,7 +88,6 @@ export default function AddCoupon() {
                 />
               </div>
             </div>
-            {/* start date */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Start Date
@@ -104,8 +99,6 @@ export default function AddCoupon() {
                 />
               </div>
             </div>
-
-            {/* end date */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 End Date
@@ -123,7 +116,8 @@ export default function AddCoupon() {
               ) : (
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
                   Add Coupon
                 </button>
               )}

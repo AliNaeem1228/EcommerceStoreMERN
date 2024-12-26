@@ -8,27 +8,20 @@ import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import AddShippingAddress from "../Forms/AddShippingAddress";
 export default function OrderPayment() {
-  //get data from location
   const location = useLocation();
   const { sumTotalPrice } = location.state;
-  const calculateTotalDiscountedPrice = () => {};
-  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCartItemsFromLocalStorageAction());
   }, [dispatch]);
-  //get cart items from store
   const { cartItems } = useSelector((state) => state?.carts);
 
-  //user profile
   useEffect(() => {
     dispatch(getUserProfileAction());
   }, [dispatch]);
-  const { loading, error, profile } = useSelector((state) => state?.users);
+  const { profile } = useSelector((state) => state?.users);
   const user = profile?.user;
 
-  //place order action
-  //get shipping address
   const shippingAddress = user?.shippingAddress;
   const placeOrderHandler = () => {
     dispatch(
@@ -54,12 +47,10 @@ export default function OrderPayment() {
             <div className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
               <div>
                 <div className="mt-10 border-t border-gray-200 pt-10">
-                  {/* shipping Address */}
                   <AddShippingAddress />
                 </div>
               </div>
 
-              {/* Order summary */}
               <div className="mt-10 lg:mt-0">
                 <h2 className="text-lg font-medium text-gray-900">
                   Order summary
@@ -124,7 +115,8 @@ export default function OrderPayment() {
                     ) : (
                       <button
                         onClick={placeOrderHandler}
-                        className="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
+                        className="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                      >
                         Confirm Payment - ${sumTotalPrice}
                       </button>
                     )}

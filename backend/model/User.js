@@ -65,6 +65,10 @@ const UserShema = new Schema(
         type: String,
       },
     },
+    socketId: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

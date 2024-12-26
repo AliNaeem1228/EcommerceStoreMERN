@@ -4,13 +4,11 @@ import { Link } from "react-router-dom";
 import { fetchCategoriesAction } from "../../redux/slices/categories/categoriesSlice";
 
 const AllCategories = () => {
-  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchCategoriesAction());
   }, [dispatch]);
 
-  //get data from store
   const {
     categories: { categories },
   } = useSelector((state) => state?.categories);
@@ -35,7 +33,8 @@ const AllCategories = () => {
                 <Link
                   key={category?.name}
                   to={`/products-filters?category=${category?.name}`}
-                  className="relative flex h-80 w-56 flex-col mt-4 overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto">
+                  className="relative flex h-80 w-56 flex-col mt-4 overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"
+                >
                   <span aria-hidden="true" className="absolute inset-0">
                     <img
                       src={category.image}

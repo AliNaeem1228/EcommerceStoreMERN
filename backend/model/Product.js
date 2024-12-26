@@ -22,39 +22,33 @@ const ProductSchema = new Schema(
     },
     sizes: {
       type: [String],
-      enum: ["S", "M", "L", "XL", "XXL"],
       required: true,
     },
     colors: {
       type: [String],
       required: true,
     },
-
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
-
     images: [
       {
         type: String,
         required: true,
       },
     ],
-
     reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Review",
       },
     ],
-
     price: {
       type: Number,
       required: true,
     },
-
     totalQty: {
       type: Number,
       required: true,

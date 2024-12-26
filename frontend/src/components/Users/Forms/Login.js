@@ -6,44 +6,38 @@ import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  //dispatch
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    email: "", // Initialize email with an empty string
-    password: "", // Initialize password with an empty string
+    email: "",
+    password: "",
   });
 
-  //---Destructuring---
   const { email, password } = formData;
-  //---onchange handler----
   const onChangeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //---onsubmit handler----
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     const login = await dispatch(loginUserAction({ email, password }));
     console.log("login data  ==", login?.payload?.verified);
     if (!login?.payload?.verified) {
-      console.log("login?.payload?.user?._id == ", login?.payload?.user?._id)
+      console.log("login?.payload?.user?._id == ", login?.payload?.user?._id);
       navigate(`/send-otp/${login?.payload?.user?._id}`);
     }
-
   };
 
-  //get data from store
   const { error, loading, userInfo } = useSelector(
     (state) => state?.users?.userAuth
   );
 
-  //redirect
   useEffect(() => {
-    if (userInfo?.userFound) {
+    if (userInfo?.userFound?.isVerified) {
       window.location.href = "/";
     }
   }, [userInfo]);
+
   return (
     <>
       <section className="py-20 bg-gray-100 overflow-x-hidden">
@@ -58,7 +52,6 @@ const Login = () => {
                 <p className="mb-10 font-semibold font-heading">
                   Happy to see you again
                 </p>
-                {/* err */}
                 {error && <ErrorMsg message={error?.message} />}
                 <form
                   className="flex flex-wrap -mx-4"
@@ -114,8 +107,7 @@ const Login = () => {
             <div
               className="w-full md:w-2/6 h-128 md:h-auto flex items-center lg:items-end px-4 pb-20 bg-cover bg-no-repeat"
               style={{
-                backgroundImage:
-                  'url("https://cdn.pixabay.com/photo/2017/03/29/04/47/high-heels-2184095_1280.jpg")',
+                backgroundImage: 'url("/images/Form.jpg")',
               }}
             ></div>
           </div>

@@ -13,33 +13,30 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UpdateCoupon() {
-  //get coupon from url
   const { code } = useParams();
-  //dispatch
+
   const dispatch = useDispatch();
-  //---Fetch coupon ---
+
   useEffect(() => {
     dispatch(fetchCouponAction(code));
   }, [code, dispatch]);
   const { coupon, loading, error, isUpdated } = useSelector(
     (state) => state?.coupons
   );
-  //get the coupon
+
   console.log(coupon?.coupon?._id);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
-  //---handle form data---
   const [formData, setFormData] = useState({
     code: coupon?.coupon?.code,
     discount: coupon?.coupon?.discount,
   });
 
-  //onHandleChange---
   const onHandleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  //onHandleSubmit---
+
   const onHandleSubmit = (e) => {
     e.preventDefault();
     dispatch(
@@ -51,7 +48,7 @@ export default function UpdateCoupon() {
         endDate,
       })
     );
-    //reset
+
     setFormData({
       code: "",
       discount: "",
@@ -73,7 +70,6 @@ export default function UpdateCoupon() {
             <form className="space-y-6" onSubmit={onHandleSubmit}>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  {/* name */}
                   Name
                 </label>
                 <div className="mt-1">
@@ -88,7 +84,6 @@ export default function UpdateCoupon() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  {/* discount */}
                   Discount (in %)
                 </label>
                 <div className="mt-1">
@@ -101,7 +96,6 @@ export default function UpdateCoupon() {
                   />
                 </div>
               </div>
-              {/* start date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Start Date
@@ -113,8 +107,6 @@ export default function UpdateCoupon() {
                   />
                 </div>
               </div>
-
-              {/* end date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   End Date
@@ -132,7 +124,8 @@ export default function UpdateCoupon() {
                 ) : (
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
                     Update Coupon
                   </button>
                 )}

@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 
 export default function CategoryToAdd() {
-  let handleCategory;
-
   return (
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -13,7 +11,8 @@ export default function CategoryToAdd() {
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
-            stroke="currentColor">
+            stroke="currentColor"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -31,7 +30,8 @@ export default function CategoryToAdd() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700">
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Name
                 </label>
                 <div className="mt-1">
@@ -58,7 +58,8 @@ export default function CategoryToAdd() {
                 <div>
                   <Link
                     to="/admin/add-brand"
-                    className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50">
+                    className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
+                  >
                     Add Brand
                   </Link>
                 </div>
@@ -67,7 +68,8 @@ export default function CategoryToAdd() {
                   <div>
                     <Link
                       to="/admin/add-color"
-                      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50">
+                      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
+                    >
                       Add Color
                     </Link>
                   </div>
@@ -77,8 +79,19 @@ export default function CategoryToAdd() {
                   <div>
                     <Link
                       to="/admin/add-category"
-                      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50">
+                      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
+                    >
                       Add Category
+                    </Link>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <Link
+                      to="/admin/add-size"
+                      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
+                    >
+                      Add Size
                     </Link>
                   </div>
                 </div>
