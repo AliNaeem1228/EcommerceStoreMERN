@@ -8,7 +8,7 @@ export const createCategoryCtrl = asyncHandler(async (req, res) => {
     throw new Error("Category already exists");
   }
   const category = await Category.create({
-    name: name?.toLowerCase(),
+    name: name,
     user: req.userAuthId,
     image: req?.file?.path,
   });

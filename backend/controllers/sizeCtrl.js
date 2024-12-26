@@ -9,7 +9,7 @@ export const createSizeCtrl = asyncHandler(async (req, res) => {
   }
 
   const size = await Size.create({
-    name: name.toLowerCase(),
+    name: name,
     user: req.userAuthId,
   });
 

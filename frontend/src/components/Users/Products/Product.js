@@ -6,7 +6,7 @@ import {
   CurrencyDollarIcon,
   GlobeAmericasIcon,
 } from "@heroicons/react/24/outline";
-import { StarIcon } from "@heroicons/react/20/solid";
+import { HeartIcon, StarIcon } from "@heroicons/react/20/solid";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductAction } from "../../../redux/slices/products/productSlices";
@@ -187,7 +187,7 @@ export default function Product() {
                     href="#"
                     className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                   >
-                    {productDetails?.product?.totalReviews} total reviews
+                    {/* {productDetails?.product?.totalReviews} Total Reviews */}
                   </a>
                 </div>
               </div>
@@ -225,6 +225,7 @@ export default function Product() {
           <div className="mt-8 lg:col-span-5">
             <>
               <div className="mt-8 flex items-center">
+                <div>Quantity: </div>
                 <button
                   onClick={() => adjustQuantity(-1)}
                   className="px-3 py-1 border rounded-md"
@@ -307,76 +308,81 @@ export default function Product() {
                 <button
                   style={{ cursor: "not-allowed" }}
                   disabled
-                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 py-3 px-8 text-base font-medium text-whitefocus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="mt-8 flex w-full text-white items-center justify-center rounded-md border border-transparent bg-gray-600 py-3 px-8 text-base font-medium text-whitefocus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   Out of Stock
                 </button>
               ) : (
-                <div>
+                <div className="flex gap-2 justify-evenly">
                   <button
                     onClick={addToCartHandler}
-                    className="mt-8 flex w-full justify-center rounded-md bg-indigo-600 py-3 px-8 text-white"
+                    className="mt-8 flex w-half justify-center rounded-md bg-indigo-600 py-3 px-8 text-white"
                   >
                     {productExists ? "Update Quantity in Cart" : "Add to Cart"}
                   </button>
                   <button
                     onClick={() => buyNowHandler()}
-                    className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-green-600 py-3 px-8 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="mt-8 flex w-half items-center justify-center rounded-md border border-transparent bg-green-600 py-3 px-8 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     Buy Now
                   </button>
+                  {product?.qtyLeft <= 0 ? (
+                    <button
+                      style={{ cursor: "not-allowed", width: "50px" }}
+                      disabled
+                      className="mt-8 text-grey-700 font-small p-1"
+                    >
+                      <HeartIcon />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        const userInfo = JSON.parse(
+                          localStorage.getItem("userInfo")
+                        );
+                        const userId = userInfo?._id;
+
+                        if (!userId) {
+                          Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "You need to log in to add items to your wishlist.",
+                          });
+                          return;
+                        }
+
+                        dispatch(
+                          createWishlistAction({
+                            userId,
+                            productId: product?._id,
+                          })
+                        )
+                          .unwrap()
+                          .then(() => {
+                            Swal.fire({
+                              icon: "success",
+                              title: "Success",
+                              text: "Product added to wishlist successfully.",
+                            });
+                          })
+                          .catch((error) => {
+                            Swal.fire({
+                              icon: "error",
+                              title: "Error",
+                              text:
+                                error ||
+                                "Failed to add the product to your wishlist.",
+                            });
+                          });
+                      }}
+                      // className="mt-8 flex w-half items-center justify-center rounded-md border border-transparent py-3 px-8 text-base text-red-700 font-medium  hover:text-red-500 "
+                      className="mt-8 text-red-700 font-small p-1 hover:text-red-500"
+                      style={{ width: "50px" }}
+                    >
+                      <HeartIcon />
+                    </button>
+                  )}
                 </div>
-              )}
-              {product?.qtyLeft <= 0 ? (
-                <button
-                  style={{ cursor: "not-allowed" }}
-                  disabled
-                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 py-3 px-8 text-base font-medium text-white"
-                >
-                  Add to Wishlist
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    const userInfo = JSON.parse(
-                      localStorage.getItem("userInfo")
-                    );
-                    const userId = userInfo?._id;
-
-                    if (!userId) {
-                      Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "You need to log in to add items to your wishlist.",
-                      });
-                      return;
-                    }
-
-                    dispatch(
-                      createWishlistAction({ userId, productId: product?._id })
-                    )
-                      .unwrap()
-                      .then(() => {
-                        Swal.fire({
-                          icon: "success",
-                          title: "Success",
-                          text: "Product added to wishlist successfully.",
-                        });
-                      })
-                      .catch((error) => {
-                        Swal.fire({
-                          icon: "error",
-                          title: "Error",
-                          text:
-                            error ||
-                            "Failed to add the product to your wishlist.",
-                        });
-                      });
-                  }}
-                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 py-3 px-8 text-base font-medium text-white hover:bg-red-700"
-                >
-                  Add to Wishlist
-                </button>
               )}
             </>
 
@@ -387,7 +393,10 @@ export default function Product() {
               </div>
             </div>
 
-            <section aria-labelledby="policies-heading" className="mt-10">
+            <section
+              aria-labelledby="policies-heading"
+              className="mt-10 text-black"
+            >
               <h2 id="policies-heading" className="sr-only">
                 Our Policies
               </h2>
@@ -417,7 +426,7 @@ export default function Product() {
           </div>
         </div>
 
-        <section aria-labelledby="reviews-heading" className="mt-16 sm:mt-24">
+        <section aria-labelledby="reviews-heading" className="">
           <h2
             id="reviews-heading"
             className="text-lg font-medium text-gray-900"

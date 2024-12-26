@@ -103,7 +103,7 @@ const colorsSlice = createSlice({
     builder.addCase(fetchColorsAction.fulfilled, (state, action) => {
       state.loading = false;
       state.colors = action.payload;
-      state.isAdded = true;
+      state.isAdded = false;
     });
     builder.addCase(fetchColorsAction.rejected, (state, action) => {
       state.loading = false;

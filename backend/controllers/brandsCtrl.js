@@ -8,7 +8,7 @@ export const createBrandCtrl = asyncHandler(async (req, res) => {
     throw new Error("Brand already exists");
   }
   const brand = await Brand.create({
-    name: name.toLowerCase(),
+    name: name,
     user: req.userAuthId,
   });
 

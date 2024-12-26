@@ -9,7 +9,7 @@ export const createColorCtrl = asyncHandler(async (req, res) => {
   }
 
   const color = await Color.create({
-    name: name.toLowerCase(),
+    name: name,
     user: req.userAuthId,
   });
 
