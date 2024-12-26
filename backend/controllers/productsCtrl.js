@@ -101,21 +101,19 @@ export const getProductsCtrl = asyncHandler(async (req, res) => {
       sizes: { $regex: req.query.size, $options: "i" },
     });
   }
-  //filter by price range
+
   if (req.query.price) {
     const priceRange = req.query.price.split("-");
-    //gte: greater or equal
-    //lte: less than or equal to
+
     productQuery = productQuery.find({
       price: { $gte: priceRange[0], $lte: priceRange[1] },
     });
   }
-  //pagination
-  //page
+
   const page = parseInt(req.query.page) ? parseInt(req.query.page) : 1;
-  //limit
+
   const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 10;
-  //startIdx
+
   const startIndex = (page - 1) * limit;
   //endIdx
   const endIndex = page * limit;
@@ -124,7 +122,6 @@ export const getProductsCtrl = asyncHandler(async (req, res) => {
 
   productQuery = productQuery.skip(startIndex).limit(limit);
 
-  //pagination results
   const pagination = {};
   if (endIndex < total) {
     pagination.next = {
@@ -139,7 +136,6 @@ export const getProductsCtrl = asyncHandler(async (req, res) => {
     };
   }
 
-  //await the query
   const products = await productQuery.populate("reviews");
   res.json({
     status: "success",
@@ -181,7 +177,6 @@ export const updateProductCtrl = asyncHandler(async (req, res) => {
     totalQty,
     brand,
   } = req.body;
-  //validation
 
   //update
   const product = await Product.findByIdAndUpdate(
