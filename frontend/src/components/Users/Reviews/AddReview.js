@@ -1,20 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { createReviewAction } from "../../../redux/slices/reviews/reviewsSlice";
+import { resetSuccessAction } from "../../../redux/slices/globalActions/globalActions";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
+import { StarIcon as SolidStarIcon } from "@heroicons/react/20/solid";
+import { StarIcon as OutlineStarIcon } from "@heroicons/react/24/outline";
 
 export default function AddReview() {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { id } = useParams(); // Get the product ID from the URL
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    rating: "",
+    rating: 0, // Default rating set to 0
     message: "",
   });
+
+  const handleStarClick = (rating) => {
+    setFormData((prev) => ({ ...prev, rating }));
+  };
 
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,6 +29,9 @@ export default function AddReview() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
+    if (formData.rating < 1 || formData.rating > 5) {
+      return alert("Please select a rating from 1 to 5");
+    }
     dispatch(
       createReviewAction({
         id,
@@ -33,6 +43,16 @@ export default function AddReview() {
 
   const { loading, error, isAdded } = useSelector((state) => state?.reviews);
 
+  useEffect(() => {
+    if (isAdded) {
+      // Reset success state after a brief timeout
+      setTimeout(() => {
+        dispatch(resetSuccessAction());
+        navigate(`/products/${id}`); // Navigate back to the product page
+      }, 2000); // 2-second delay
+    }
+  }, [isAdded, dispatch, navigate, id]);
+
   return (
     <>
       {error && <ErrorMsg message={error?.message} />}
@@ -42,12 +62,6 @@ export default function AddReview() {
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Add Your Review
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            <p className="font-medium text-indigo-600 hover:text-indigo-500">
-              You are reviewing:{" "}
-              <span className="text-gray-900">Product Name</span>
-            </p>
-          </p>
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -55,29 +69,32 @@ export default function AddReview() {
             <form className="space-y-6" onSubmit={handleOnSubmit}>
               <div>
                 <label
-                  htmlFor="location"
+                  htmlFor="rating"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Rating
                 </label>
-                <select
-                  value={formData.rating}
-                  onChange={handleOnChange}
-                  name="rating"
-                  className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 border-2 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  defaultValue="Canada"
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5 </option>
-                </select>
+                <div className="flex items-center space-x-1 mt-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      type="button"
+                      key={star}
+                      onClick={() => handleStarClick(star)}
+                      className="focus:outline-none"
+                    >
+                      {formData.rating >= star ? (
+                        <SolidStarIcon className="h-8 w-8 text-yellow-500" />
+                      ) : (
+                        <OutlineStarIcon className="h-8 w-8 text-gray-400" />
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div>
                 <label
-                  htmlFor="comment"
+                  htmlFor="message"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Message
@@ -109,7 +126,7 @@ export default function AddReview() {
               <div>
                 <button
                   type="button"
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate(`/products/${id}`)} // Navigate back to the product page
                   className="flex w-full justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
                   I have Changed my mind

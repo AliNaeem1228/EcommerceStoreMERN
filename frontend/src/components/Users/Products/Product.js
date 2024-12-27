@@ -40,8 +40,7 @@ export default function Product() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
-
-  let productDetails = {};
+  const [isInWishlist, setIsInWishlist] = useState(false);
 
   const { id } = useParams();
   useEffect(() => {
@@ -145,6 +144,29 @@ export default function Product() {
     navigate("/shopping-cart");
   };
 
+  const [activeImageIndex, setActiveImageIndex] = useState(0); // For active slider image
+
+  const nextImage = () => {
+    setActiveImageIndex((prevIndex) =>
+      prevIndex === product?.images?.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const prevImage = () => {
+    setActiveImageIndex((prevIndex) =>
+      prevIndex === 0 ? product?.images?.length - 1 : prevIndex - 1
+    );
+  };
+
+  const selectImage = (index) => {
+    setActiveImageIndex(index);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(nextImage, 3000); // Auto-slide every 3 seconds
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, [product?.images, activeImageIndex]);
+
   return (
     <div className="bg-white">
       <main className="mx-auto mt-8 max-w-2xl px-4 pb-16 sm:px-6 sm:pb-24 lg:max-w-7xl lg:px-8">
@@ -205,20 +227,59 @@ export default function Product() {
           <div className="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
             <h2 className="sr-only">Images</h2>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
-              {product?.images?.map((image) => (
-                <img
-                  key={image.id}
-                  src={image}
-                  alt={image.imageAlt}
-                  className={classNames(
-                    image.primary
-                      ? "lg:col-span-2 lg:row-span-2"
-                      : "hidden lg:block",
-                    "rounded-lg"
-                  )}
-                />
-              ))}
+            <div className="relative w-full max-w-2xl mx-auto">
+              {/* Slider Section */}
+              <div className="w-full h-[650px] overflow-hidden bg-gray-200 rounded-lg flex items-center justify-center">
+                {product?.images?.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Product Image ${index + 1}`}
+                    className={classNames(
+                      index === activeImageIndex ? "block" : "hidden",
+                      "max-h-full max-w-full object-contain"
+                    )}
+                  />
+                ))}
+              </div>
+
+              {/* Navigation Buttons */}
+              <button
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-gray-800"
+                aria-label="Previous Image"
+              >
+                &#8592;
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-gray-800"
+                aria-label="Next Image"
+              >
+                &#8594;
+              </button>
+
+              {/* Thumbnails Section */}
+              <div className="flex justify-center mt-6 space-x-4">
+                {product?.images?.map((image, index) => (
+                  <div
+                    key={index}
+                    onClick={() => selectImage(index)}
+                    className={classNames(
+                      "w-20 h-20 flex items-center justify-center border rounded-lg cursor-pointer hover:opacity-80",
+                      index === activeImageIndex
+                        ? "border-indigo-500 ring-2 ring-indigo-500"
+                        : "border-gray-300"
+                    )}
+                  >
+                    <img
+                      src={image}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

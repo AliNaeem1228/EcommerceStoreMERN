@@ -22,7 +22,7 @@ const ProductSchema = new Schema(
     },
     sizes: {
       type: [String],
-      required: true,
+      required: false,
     },
     colors: {
       type: [String],

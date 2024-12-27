@@ -86,11 +86,31 @@ export default function OrdersList() {
                     </td>
                     <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                       {order.paymentStatus === "Not paid" ? (
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-600 text-gray-300">
+                        <span
+                          style={{
+                            "max-width": "150px",
+                            "min-height": "20px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                          className="uppercase px-5 py-2 inline-flex text-ms leading-5 font-semibold rounded-full bg-red-600 text-white"
+                        >
                           {order.paymentStatus}
                         </span>
                       ) : (
-                        order.paymentStatus
+                        <span
+                          style={{
+                            "max-width": "150px",
+                            "min-height": "20px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                          className="uppercase px-1 py-2 inline-flex text-ms font-semibold rounded-full bg-green-600 text-white"
+                        >
+                          {order.paymentStatus}
+                        </span>
                       )}
                     </td>
                     <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
