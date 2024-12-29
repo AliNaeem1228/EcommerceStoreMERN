@@ -6,6 +6,8 @@ import {
   updateShippingAddresctrl,
   verifyOtp,
   sendOtp,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/usersCtrl.js";
 import { isLoggedIn } from "../middlewares/isLoggedIn.js";
 
@@ -15,6 +17,8 @@ userRoutes.post("/register", registerUserCtrl);
 userRoutes.post("/login", loginUserCtrl);
 userRoutes.post("/verify-otp", verifyOtp);
 userRoutes.post("/send-otp", sendOtp);
+userRoutes.post("/forgot-password", forgotPassword);
+userRoutes.post("/reset-password", resetPassword);
 userRoutes.get("/profile", isLoggedIn, getUserProfileCtrl);
 userRoutes.put("/update/shipping", isLoggedIn, updateShippingAddresctrl);
 export default userRoutes;

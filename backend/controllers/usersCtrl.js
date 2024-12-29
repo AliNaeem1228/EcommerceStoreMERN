@@ -5,6 +5,7 @@ import generateToken from "../utils/generateToken.js";
 import Otp from "../model/OTP.js";
 import sendMail from "../utils/Emails.js";
 import generateOTP from "../utils/GenerateOtp.js";
+import PasswordResetToken from "../model/PasswordResetToken.js";
 
 export const registerUserCtrl = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -182,5 +183,95 @@ export const sendOtp = async (req, res) => {
       message: "Some error occured while resending otp, please try again later",
     });
     console.log(error);
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  let newToken;
+  try {
+    const isExistingUser = await User.findOne({ email: req.body.email });
+
+    if (!isExistingUser) {
+      return res
+        .status(404)
+        .json({ message: "Provided email does not exists" });
+    }
+
+    await PasswordResetToken.deleteMany({ user: isExistingUser._id });
+
+    const passwordResetToken = generateToken(isExistingUser?._id);
+
+    const hashedToken = await bcrypt.hash(passwordResetToken, 10);
+
+    newToken = new PasswordResetToken({
+      user: isExistingUser._id,
+      token: passwordResetToken,
+      expiresAt: Date.now() + parseInt("120000"),
+    });
+    await newToken.save();
+
+    await sendMail(
+      isExistingUser.email,
+      "Password Reset Link for Your Account",
+      `<p>Dear ${isExistingUser.name},
+
+        We received a request to reset the password for your account. If you initiated this request, please use the following link to reset your password:</p>
+        
+        <p><a href=${process.env.FRONTEND}/reset-password/${isExistingUser._id}/${passwordResetToken} target="_blank">Reset Password</a></p>
+        
+        <p>This link is valid for a limited time. If you did not request a password reset, please ignore this email. Your account security is important to us.
+        
+        Thank you,
+        </p>`
+    );
+
+    res
+      .status(200)
+      .json({ message: `Password Reset link sent to ${isExistingUser.email}` });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error occured while sending password reset mail" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const isExistingUser = await User.findById(req.body.userId);
+
+    if (!isExistingUser) {
+      return res.status(404).json({ message: "User does not exists" });
+    }
+
+    const isResetTokenExisting = await PasswordResetToken.findOne({
+      user: isExistingUser._id,
+    });
+
+    if (!isResetTokenExisting) {
+      return res.status(404).json({ message: "Reset Link is Not Valid" });
+    }
+
+    if (isResetTokenExisting.expiresAt < new Date()) {
+      await PasswordResetToken.findByIdAndDelete(isResetTokenExisting._id);
+      return res.status(404).json({ message: "Reset Link has been expired" });
+    }
+
+    if (isResetTokenExisting && isResetTokenExisting.expiresAt > new Date()) {
+      await PasswordResetToken.findByIdAndDelete(isResetTokenExisting._id);
+
+      await User.findByIdAndUpdate(isExistingUser._id, {
+        password: await bcrypt.hash(req.body.password, 10),
+      });
+      return res.status(200).json({ message: "Password Updated Successfuly" });
+    }
+
+    return res.status(404).json({ message: "Reset Link has been expired" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message:
+        "Error occured while resetting the password, please try again later",
+    });
   }
 };

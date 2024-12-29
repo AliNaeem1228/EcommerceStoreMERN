@@ -4,12 +4,11 @@ import {
   sendOtpAction,
   verifyOtpAction,
 } from "../../../redux/slices/users/usersSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import OtpInput from "react-otp-input";
 
 const SendOtp = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const { loading, error, success } = useSelector((state) => state?.users);
   const { user_id } = useParams();
@@ -23,17 +22,17 @@ const SendOtp = () => {
     dispatch(sendOtpAction(user_id));
   };
 
-  const handleVerifyOtp = async() => {
+  const handleVerifyOtp = async () => {
     if (!user_id || !otp) {
       console.error("Error: Missing User ID or OTP.");
       return;
     }
     console.log("Verifying OTP for user_id:", user_id, "OTP:", otp);
 
-   const verified  = await  dispatch(verifyOtpAction({ _id: user_id, otp }));
-    console.log("verified == ",verified)
-    if(verified){
-      window.location.href = '/';
+    const verified = await dispatch(verifyOtpAction({ _id: user_id, otp }));
+    console.log("verified == ", verified);
+    if (verified) {
+      window.location.href = "/";
     }
   };
 

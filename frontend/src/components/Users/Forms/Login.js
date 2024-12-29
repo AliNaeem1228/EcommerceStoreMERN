@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUserAction } from "../../../redux/slices/users/usersSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Login = () => {
     console.log("login data  ==", login?.payload?.verified);
     if (!login?.payload?.verified) {
       console.log("login?.payload?.user?._id == ", login?.payload?.user?._id);
-      if(login?.payload?.user?._id){
+      if (login?.payload?.user?._id) {
         navigate(`/send-otp/${login?.payload?.user?._id}`);
       }
     }
@@ -104,6 +104,15 @@ const Login = () => {
                     )}
                   </div>
                 </form>
+                {/* Forgot Password Button */}
+                <div className="mt-2">
+                  <Link
+                    to="/forgot-password"
+                    className="text-blue-500 hover:underline text-sm"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
               </div>
             </div>
             <div

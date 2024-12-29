@@ -39,6 +39,8 @@ import AddSize from "./components/Admin/Categories/AddSize";
 import SizeList from "./components/Admin/Categories/SizeList";
 import Chat from "./components/Chat/Chat";
 import AddressChangeForm from "./components/Users/Profile/AddressChangeForm";
+import ForgotPassword from "./components/Users/Forms/ForgotPassword";
+import ResetPassword from "./components/Users/Forms/ResetPassword";
 
 const App = () => {
   return (
@@ -234,6 +236,12 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/send-otp/:user_id" element={<SendOtp />} />
+        <Route path="/forgot-password/" element={<ForgotPassword />} />
+        <Route
+          path="/reset-password/:user_id/:token"
+          element={<ResetPassword />}
+        />
+
         <Route
           path="/customer-profile"
           element={

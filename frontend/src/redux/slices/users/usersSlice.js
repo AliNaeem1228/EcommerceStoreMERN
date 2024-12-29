@@ -2,11 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import baseURL from "../../../utils/baseURL";
-import {
-  resetErrAction,
-  resetSuccessAction,
-} from "../globalActions/globalActions";
-import { useNavigate } from "react-router-dom";
+import { resetErrAction } from "../globalActions/globalActions";
 
 //initialState
 const initialState = {
@@ -24,6 +20,12 @@ const initialState = {
       ? JSON.parse(localStorage.getItem("userInfo"))
       : null,
   },
+  forgotPasswordStatus: "idle",
+  forgotPasswordSuccessMessage: null,
+  forgotPasswordError: null,
+  resetPasswordStatus: "idle",
+  resetPasswordSuccessMessage: null,
+  resetPasswordError: null,
 };
 
 //register action
@@ -75,7 +77,6 @@ export const updateUserShippingAddressAction = createAsyncThunk(
       country
     );
     try {
-      //get token
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
@@ -128,18 +129,15 @@ export const getUserProfileAction = createAsyncThunk(
 //login action
 export const loginUserAction = createAsyncThunk(
   "users/login",
-  async ({ email, password }, { rejectWithValue, getState, dispatch }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      //make the http request
       const { data } = await axios.post(`${baseURL}/users/login`, {
         email,
         password,
       });
-      console.log("login data redux  ==", data);
 
-      //save the user into localstorage
       localStorage.setItem("userInfo", JSON.stringify(data));
-      return data
+      return data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error?.response?.data);
@@ -152,12 +150,12 @@ export const verifyOtpAction = createAsyncThunk(
   "users/verify-otp",
   async ({ _id, otp }, { rejectWithValue }) => {
     try {
-      console.log("createAsyncThunk ==")
+      console.log("createAsyncThunk ==");
       const { data } = await axios.post(`${baseURL}/users/verify-otp`, {
         userId: _id,
         otp,
       });
-      console.log("On verify otp data --",data)
+      console.log("On verify otp data --", data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       window.location.reload();
       return data;
@@ -188,7 +186,7 @@ export const sendOtpAction = createAsyncThunk(
       const { data } = await axios.post(`${baseURL}/users/send-otp`, {
         user: _id,
       });
-      return data; // Success payload
+      return data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to send OTP"
@@ -197,8 +195,43 @@ export const sendOtpAction = createAsyncThunk(
   }
 );
 
-//users slice
+//Forgot Password
+export const forgotPasswordAction = createAsyncThunk(
+  "users/forgot-password",
+  async (email, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`${baseURL}/users/forgot-password`, {
+        email,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to send forgot password link"
+      );
+    }
+  }
+);
 
+//Reset Password
+export const resetPasswordAction = createAsyncThunk(
+  "users/reset-password",
+  async ({ _id, password }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(`${baseURL}/users/reset-password`, {
+        userId: _id,
+        password,
+      });
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to reset password"
+      );
+    }
+  }
+);
+
+//users slice
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -293,8 +326,8 @@ const usersSlice = createSlice({
     });
     builder.addCase(verifyOtpAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.isVerified = action.payload.isVerified; // Assuming backend sends this field
-      state.userAuth.userInfo = action.payload; // Save authenticated user data
+      state.isVerified = action.payload.isVerified;
+      state.userAuth.userInfo = action.payload;
       state.success = true;
       state.error = null;
     });
@@ -304,6 +337,30 @@ const usersSlice = createSlice({
       state.success = false;
       state.error = action.payload;
     });
+    builder
+      .addCase(forgotPasswordAction.pending, (state) => {
+        state.forgotPasswordStatus = "pending";
+      })
+      .addCase(forgotPasswordAction.fulfilled, (state, action) => {
+        state.forgotPasswordStatus = "fullfilled";
+        state.forgotPasswordSuccessMessage = action.payload;
+      })
+      .addCase(forgotPasswordAction.rejected, (state, action) => {
+        state.forgotPasswordStatus = "rejected";
+        state.forgotPasswordError = action.error;
+      })
+
+      .addCase(resetPasswordAction.pending, (state) => {
+        state.resetPasswordStatus = "pending";
+      })
+      .addCase(resetPasswordAction.fulfilled, (state, action) => {
+        state.resetPasswordStatus = "fullfilled";
+        state.resetPasswordSuccessMessage = action.payload;
+      })
+      .addCase(resetPasswordAction.rejected, (state, action) => {
+        state.resetPasswordStatus = "rejected";
+        state.resetPasswordError = action.error;
+      });
   },
 });
 
