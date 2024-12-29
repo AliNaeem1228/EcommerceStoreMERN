@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchOrdersAction } from "../../../redux/slices/orders/ordersSlices";
+import {
+  deleteOrderAction,
+  fetchOrdersAction,
+} from "../../../redux/slices/orders/ordersSlices";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
@@ -12,6 +15,10 @@ export default function OrdersList() {
   useEffect(() => {
     dispatch(fetchOrdersAction());
   }, [dispatch]);
+
+  const deleteOrderHandler = (orderId) => {
+    dispatch(deleteOrderAction(orderId));
+  };
 
   const {
     error,
@@ -132,6 +139,12 @@ export default function OrdersList() {
                       >
                         Edit
                       </Link>
+                      <button
+                        onClick={() => deleteOrderHandler(order._id)}
+                        className="ml-4 text-red-600 hover:text-red-800"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}

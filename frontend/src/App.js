@@ -38,6 +38,7 @@ import Wishlist from "./components/Users/Products/Wishlist";
 import AddSize from "./components/Admin/Categories/AddSize";
 import SizeList from "./components/Admin/Categories/SizeList";
 import Chat from "./components/Chat/Chat";
+import AddressChangeForm from "./components/Users/Profile/AddressChangeForm";
 
 const App = () => {
   return (
@@ -229,6 +230,7 @@ const App = () => {
         />
 
         {/* users */}
+        <Route path="/address" element={<AddressChangeForm />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/send-otp/:user_id" element={<SendOtp />} />

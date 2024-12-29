@@ -14,7 +14,7 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
   if (productExists) {
     throw new Error("Product Already Exists");
   }
-  //find the brand
+
   const brandFound = await Brand.findOne({
     name: brand,
   });
@@ -24,7 +24,7 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
       "Brand not found, please create brand first or check brand name"
     );
   }
-  //find the category
+
   const categoryFound = await Category.findOne({
     name: category,
   });
@@ -33,7 +33,7 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
       "Category not found, please create category first or check category name"
     );
   }
-  //create the product
+
   const product = await Product.create({
     name,
     description,
@@ -46,15 +46,15 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
     brand,
     images: convertedImgs,
   });
-  //push the product into category
+
   categoryFound.products.push(product._id);
-  //resave
+
   await categoryFound.save();
-  //push the product into brand
+
   brandFound.products.push(product._id);
-  //resave
+
   await brandFound.save();
-  //send response
+
   res.json({
     status: "success",
     message: "Product created successfully",
@@ -64,38 +64,33 @@ export const createProductCtrl = asyncHandler(async (req, res) => {
 
 export const getProductsCtrl = asyncHandler(async (req, res) => {
   console.log(req.query);
-  //query
+
   let productQuery = Product.find();
 
-  //search by name
   if (req.query.name) {
     productQuery = productQuery.find({
       name: { $regex: req.query.name, $options: "i" },
     });
   }
 
-  //filter by brand
   if (req.query.brand) {
     productQuery = productQuery.find({
       brand: { $regex: req.query.brand, $options: "i" },
     });
   }
 
-  //filter by category
   if (req.query.category) {
     productQuery = productQuery.find({
       category: req.query.category,
     });
   }
 
-  //filter by color
   if (req.query.color) {
     productQuery = productQuery.find({
       colors: { $regex: req.query.color, $options: "i" },
     });
   }
 
-  //filter by size
   if (req.query.size) {
     productQuery = productQuery.find({
       sizes: { $regex: req.query.size, $options: "i" },
@@ -115,9 +110,9 @@ export const getProductsCtrl = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 100;
 
   const startIndex = (page - 1) * limit;
-  //endIdx
+
   const endIndex = page * limit;
-  //total
+
   const total = await Product.countDocuments();
 
   productQuery = productQuery.skip(startIndex).limit(limit);
@@ -178,7 +173,6 @@ export const updateProductCtrl = asyncHandler(async (req, res) => {
     brand,
   } = req.body;
 
-  //update
   const product = await Product.findByIdAndUpdate(
     req.params.id,
     {

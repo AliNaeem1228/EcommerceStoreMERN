@@ -123,7 +123,6 @@ export const verifyOtp = async (req, res) => {
       return res.status(400).json({ message: "Otp has been expired" });
     }
 
-    // checks if otp is there and matches the hash value then updates the user verified status to true and returns the updated user
     if (
       isOtpExisting &&
       (await bcrypt.compare(req.body.otp, isOtpExisting.otp))

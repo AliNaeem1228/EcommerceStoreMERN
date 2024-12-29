@@ -53,7 +53,7 @@ export const deleteBrandsAction = createAsyncThunk(
 
       await axios.delete(`${baseURL}/brands/${id}`, config);
 
-      return id; // Return the ID of the deleted brand
+      return id;
     } catch (error) {
       return rejectWithValue(error?.response?.data || error.message);
     }

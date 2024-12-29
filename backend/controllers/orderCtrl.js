@@ -105,6 +105,14 @@ export const updateOrderCtrl = asyncHandler(async (req, res) => {
   });
 });
 
+export const deleteOrderCtrl = asyncHandler(async (req, res) => {
+  await Order.findByIdAndDelete(req.params.id);
+  res.json({
+    status: "success",
+    message: "Order deleted successfully",
+  });
+});
+
 export const getOrderStatsCtrl = asyncHandler(async (req, res) => {
   const orders = await Order.aggregate([
     {

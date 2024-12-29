@@ -136,6 +136,26 @@ export const updateOrderAction = createAsyncThunk(
     }
   }
 );
+
+// Delete Order Action
+export const deleteOrderAction = createAsyncThunk(
+  "order/delete",
+  async (id, { rejectWithValue, getState }) => {
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await axios.delete(`${baseURL}/orders/${id}`, config);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data || error.message);
+    }
+  }
+);
+
 //slice
 const ordersSlice = createSlice({
   name: "orders",
@@ -215,6 +235,20 @@ const ordersSlice = createSlice({
     //reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
+    });
+    // delete order
+    builder.addCase(deleteOrderAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteOrderAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.orders = state.orders.filter(
+        (order) => order._id !== action.meta.arg
+      ); // Update local state by removing the deleted order
+    });
+    builder.addCase(deleteOrderAction.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     });
   },
 });

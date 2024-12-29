@@ -7,6 +7,7 @@ import {
   GlobeAmericasIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon, StarIcon } from "@heroicons/react/20/solid";
+import { HeartIcon as OutlineHeartIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductAction } from "../../../redux/slices/products/productSlices";
@@ -15,7 +16,11 @@ import {
   getCartItemsFromLocalStorageAction,
   changeOrderItemQty,
 } from "../../../redux/slices/cart/cartSlices";
-import { createWishlistAction } from "../../../redux/slices/wishlist/wishlistSlice";
+import {
+  createWishlistAction,
+  deleteWishlistAction,
+  getWishlistAction,
+} from "../../../redux/slices/wishlist/wishlistSlice";
 
 const policies = [
   {
@@ -40,13 +45,14 @@ export default function Product() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const { id } = useParams();
   useEffect(() => {
     dispatch(fetchProductAction(id));
   }, [id]);
 
+  const { wishlist } = useSelector((state) => state?.wishlist);
   const {
     product: { product },
   } = useSelector((state) => state?.products);
@@ -54,6 +60,33 @@ export default function Product() {
   useEffect(() => {
     dispatch(getCartItemsFromLocalStorageAction());
   }, []);
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userInfo?._id;
+
+    if (userId) {
+      // Ensure the wishlist is loaded from Redux or fetch it from the backend
+      if (!wishlist.length) {
+        dispatch(getWishlistAction({ userId }));
+      }
+
+      // Check if the product is in the wishlist
+      const wishlistItem = wishlist.find(
+        (item) =>
+          item.product === product?._id || item.product?._id === product?._id
+      );
+      setIsWishlisted(!!wishlistItem);
+    }
+  }, [product?._id, wishlist, dispatch]);
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userInfo?._id;
+    if (userId) {
+      dispatch(getWishlistAction({ userId }));
+    }
+  }, [dispatch]);
 
   const { cartItems } = useSelector((state) => state?.carts);
   const productExists = cartItems?.find(
@@ -72,7 +105,7 @@ export default function Product() {
         text: "Please select product color",
       });
     }
-    if (selectedSize === "") {
+    if (product?.sizes?.length > 0 && selectedSize === "") {
       return Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -95,7 +128,7 @@ export default function Product() {
           price: product?.price,
           description: product?.description,
           color: selectedColor,
-          size: selectedSize,
+          size: selectedSize || null,
           image: product?.images[0],
           totalPrice: product?.price * quantity,
           qtyLeft: product?.qtyLeft,
@@ -118,7 +151,7 @@ export default function Product() {
         text: "Please select product color",
       });
     }
-    if (selectedSize === "") {
+    if (product?.sizes?.length > 0 && selectedSize === "") {
       return Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -134,7 +167,7 @@ export default function Product() {
         price: product?.price,
         description: product?.description,
         color: selectedColor,
-        size: selectedSize,
+        size: selectedSize || null, // Pass null if size isn't selected
         image: product?.images[0],
         totalPrice: product?.price,
         qtyLeft: product?.qtyLeft,
@@ -142,6 +175,61 @@ export default function Product() {
     );
     dispatch(getCartItemsFromLocalStorageAction());
     navigate("/shopping-cart");
+  };
+
+  const handleWishlistToggle = () => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userInfo?._id;
+
+    if (!userId) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "You need to log in to manage your wishlist.",
+      });
+      return;
+    }
+
+    if (isWishlisted) {
+      const wishlistItem = wishlist.find(
+        (item) =>
+          item.product === product?._id || item.product?._id === product?._id
+      );
+      if (!wishlistItem) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Wishlist item not found.",
+        });
+        return;
+      }
+
+      dispatch(deleteWishlistAction(wishlistItem._id))
+        .unwrap()
+        .then(() => {
+          setIsWishlisted(false);
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error || "Failed to remove product from wishlist.",
+          });
+        });
+    } else {
+      dispatch(createWishlistAction({ userId, productId: product?._id }))
+        .unwrap()
+        .then(() => {
+          setIsWishlisted(true);
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error || "Failed to add product to wishlist.",
+          });
+        });
+    }
   };
 
   const [activeImageIndex, setActiveImageIndex] = useState(0); // For active slider image
@@ -337,34 +425,39 @@ export default function Product() {
               </div>
 
               <div className="mt-8">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-medium text-gray-900">Size</h2>
-                </div>
-                <RadioGroup
-                  value={selectedSize}
-                  onChange={setSelectedSize}
-                  className="mt-2"
-                >
-                  <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
-                    {product?.sizes?.map((size) => (
-                      <RadioGroup.Option
-                        key={size}
-                        value={size}
-                        className={({ active, checked }) => {
-                          return classNames(
-                            checked
-                              ? "bg-indigo-600 border-transparent  text-white hover:bg-indigo-700"
-                              : "bg-white border-gray-200 text-gray-900 hover:bg-gray-50",
-                            "border rounded-md py-3 px-3 flex items-center justify-center text-sm font-medium uppercase sm:flex-1 cursor-pointer"
-                          );
-                        }}
-                      >
-                        <RadioGroup.Label as="span">{size}</RadioGroup.Label>
-                      </RadioGroup.Option>
-                    ))}
-                  </div>
-                </RadioGroup>
+                {product?.sizes?.length > 0 && (
+                  <>
+                    <h2 className="text-sm font-medium text-gray-900">Size</h2>
+                    <RadioGroup
+                      value={selectedSize}
+                      onChange={setSelectedSize}
+                      className="mt-2"
+                    >
+                      <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+                        {product?.sizes?.map((size) => (
+                          <RadioGroup.Option
+                            key={size}
+                            value={size}
+                            className={({ active, checked }) => {
+                              return classNames(
+                                checked
+                                  ? "bg-indigo-600 border-transparent  text-white hover:bg-indigo-700"
+                                  : "bg-white border-gray-200 text-gray-900 hover:bg-gray-50",
+                                "border rounded-md py-3 px-3 flex items-center justify-center text-sm font-medium uppercase sm:flex-1 cursor-pointer"
+                              );
+                            }}
+                          >
+                            <RadioGroup.Label as="span">
+                              {size}
+                            </RadioGroup.Label>
+                          </RadioGroup.Option>
+                        ))}
+                      </div>
+                    </RadioGroup>
+                  </>
+                )}
               </div>
+
               {product?.qtyLeft <= 0 ? (
                 <button
                   style={{ cursor: "not-allowed" }}
@@ -387,62 +480,17 @@ export default function Product() {
                   >
                     Buy Now
                   </button>
-                  {product?.qtyLeft <= 0 ? (
-                    <button
-                      style={{ cursor: "not-allowed", width: "50px" }}
-                      disabled
-                      className="mt-8 text-grey-700 font-small p-1"
-                    >
-                      <HeartIcon />
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        const userInfo = JSON.parse(
-                          localStorage.getItem("userInfo")
-                        );
-                        const userId = userInfo?._id;
-
-                        if (!userId) {
-                          Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "You need to log in to add items to your wishlist.",
-                          });
-                          return;
-                        }
-
-                        dispatch(
-                          createWishlistAction({
-                            userId,
-                            productId: product?._id,
-                          })
-                        )
-                          .unwrap()
-                          .then(() => {
-                            Swal.fire({
-                              icon: "success",
-                              title: "Success",
-                              text: "Product added to wishlist successfully.",
-                            });
-                          })
-                          .catch((error) => {
-                            Swal.fire({
-                              icon: "error",
-                              title: "Error",
-                              text:
-                                error ||
-                                "Failed to add the product to your wishlist.",
-                            });
-                          });
-                      }}
-                      // className="mt-8 flex w-half items-center justify-center rounded-md border border-transparent py-3 px-8 text-base text-red-700 font-medium  hover:text-red-500 "
-                      className="mt-8 text-red-700 font-small p-1 hover:text-red-500"
-                      style={{ width: "50px" }}
-                    >
-                      <HeartIcon />
-                    </button>
-                  )}
+                  <button
+                    onClick={handleWishlistToggle}
+                    className="mt-8 text-red-700 font-small p-1 hover:text-red-500"
+                    style={{ width: "50px" }}
+                  >
+                    {isWishlisted ? (
+                      <HeartIcon className="h-10 w-10" />
+                    ) : (
+                      <OutlineHeartIcon className="h-10 w-10" />
+                    )}
+                  </button>
                 </div>
               )}
             </>

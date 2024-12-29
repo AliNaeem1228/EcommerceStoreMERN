@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { getCartItemsFromLocalStorageAction } from "../../../redux/slices/cart/cartSlices";
 import { placeOrderAction } from "../../../redux/slices/orders/ordersSlices";
 import { getUserProfileAction } from "../../../redux/slices/users/usersSlice";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import AddShippingAddress from "../Forms/AddShippingAddress";
+
 export default function OrderPayment() {
   const location = useLocation();
   const { sumTotalPrice } = location.state;
@@ -48,6 +49,12 @@ export default function OrderPayment() {
               <div>
                 <div className="mt-10 border-t border-gray-200 pt-10">
                   <AddShippingAddress />
+                  <Link
+                    to="/address"
+                    className="mt-1 inline-block px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                  >
+                    Change Address
+                  </Link>
                 </div>
               </div>
 
