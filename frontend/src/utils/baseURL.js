@@ -1,2 +1,5 @@
-const baseURL = "http://localhost:8000/api/v1";
+const PORT = 8000;
+
+const baseURL = `http://localhost:${PORT}/api`;
+
 export default baseURL;

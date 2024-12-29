@@ -8,7 +8,6 @@ import ShippingAddressDetails from "./ShippingAddressDetails";
 export default function CustomerProfile() {
   const dispatch = useDispatch();
 
-  // Fetch user profile on component mount
   useEffect(() => {
     dispatch(getUserProfileAction());
   }, [dispatch]);
@@ -16,10 +15,8 @@ export default function CustomerProfile() {
   const { error, loading, profile } = useSelector((state) => state?.users);
   const orders = profile?.user?.orders;
 
-  // State to track the current order being displayed
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
 
-  // Navigation handlers
   const handleNextOrder = () => {
     setCurrentOrderIndex((prevIndex) =>
       prevIndex < orders.length - 1 ? prevIndex + 1 : prevIndex
@@ -34,7 +31,6 @@ export default function CustomerProfile() {
 
   return (
     <>
-      {/* Customer Details */}
       <div className="flex flex-wrap -mx-3 -mb-3 md:mb-0">
         <div className="w-full md:w-1/3 px-3 mb-3 md:mb-0" />
         <div className="w-full md:w-1/2 px-3 mb-3 md:mb-0">
@@ -43,7 +39,7 @@ export default function CustomerProfile() {
             dateJoined={new Date(profile?.user?.createdAt).toDateString()}
             name={profile?.user?.name}
           />
-          {/* Change Address Button */}
+
           <div className="mt-4">
             <Link
               to="/address"
@@ -56,7 +52,6 @@ export default function CustomerProfile() {
         <div className="w-full md:w-1/3 px-3 mb-3 md:mb-0" />
       </div>
 
-      {/* Orders Section */}
       {loading ? (
         <h2>Loading...</h2>
       ) : error ? (
@@ -65,7 +60,6 @@ export default function CustomerProfile() {
         <h2 className="text-center mt-10">No Order Found</h2>
       ) : (
         <div className="relative">
-          {/* Order Navigation */}
           {orders.length > 1 && (
             <>
               <button
@@ -85,12 +79,10 @@ export default function CustomerProfile() {
             </>
           )}
 
-          {/* Display Current Order */}
           <div className="bg-gray-50 mb-8">
             <div className="mx-auto max-w-2xl pt-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
               <div className="border-t border-b border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
                 <div className="py-6 px-4 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
-                  {/* Product Details */}
                   <div className="lg:col-span-7">
                     <div className="sm:flex">
                       <div className="aspect-w-1 aspect-h-1 w-full flex-shrink-0 overflow-hidden rounded-lg sm:aspect-none sm:h-40 sm:w-40">
@@ -121,7 +113,6 @@ export default function CustomerProfile() {
                     </div>
                   </div>
 
-                  {/* Order and Payment Details */}
                   <div className="lg:col-span-5">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
@@ -170,7 +161,6 @@ export default function CustomerProfile() {
                   </div>
                 </div>
 
-                {/* Shipping Address */}
                 <div className="p-4 border-t border-gray-200">
                   <ShippingAddressDetails
                     shippingAddress={orders[currentOrderIndex]?.shippingAddress}

@@ -29,8 +29,11 @@ const UpdateOrders = () => {
 
   const handleOnChange = (e) => {
     const newStatus = e.target.value;
-    setOrderStatus(newStatus);
-    dispatch(updateOrderAction({ status: newStatus, id })).then(() => {
+    setOrderStatus(newStatus); // Update local state only
+  };
+
+  const handleOnSubmit = () => {
+    dispatch(updateOrderAction({ status: orderStatus, id })).then(() => {
       navigate("/admin");
     });
   };
@@ -65,6 +68,12 @@ const UpdateOrders = () => {
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
           </select>
+          <button
+            onClick={handleOnSubmit}
+            className="mt-4 w-full px-4 py-2 bg-indigo-500 text-white rounded-md shadow hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>

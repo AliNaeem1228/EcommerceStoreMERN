@@ -18,9 +18,7 @@ import Order from "./model/Order.js";
 import couponsRouter from "./routes/couponsRouter.js";
 import wishlistRouter from "./routes/wishlistRouter.js";
 import sizeRouter from "./routes/sizeRouter.js";
-import Chat from "./model/Chat.js";
 import { Server } from "socket.io";
-// import chatRouter from "./routes/chatRouter.js";
 
 dotenv.config();
 
@@ -80,23 +78,22 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-// app.use(morgan("tiny"));
+app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join("public", "index.html"));
 });
 
-app.use("/api/v1/users/", userRoutes);
-app.use("/api/v1/products/", productsRouter);
-app.use("/api/v1/categories/", categoriesRouter);
-app.use("/api/v1/brands/", brandsRouter);
-app.use("/api/v1/colors/", colorRouter);
-app.use("/api/v1/reviews/", reviewRouter);
-app.use("/api/v1/orders/", orderRouter);
-app.use("/api/v1/coupons/", couponsRouter);
-app.use("/api/v1/wishlist/", wishlistRouter);
-app.use("/api/v1/size/", sizeRouter);
-// app.use("/api/v1/chats", chatRouter);
+app.use("/api/users/", userRoutes);
+app.use("/api/products/", productsRouter);
+app.use("/api/categories/", categoriesRouter);
+app.use("/api/brands/", brandsRouter);
+app.use("/api/colors/", colorRouter);
+app.use("/api/reviews/", reviewRouter);
+app.use("/api/orders/", orderRouter);
+app.use("/api/coupons/", couponsRouter);
+app.use("/api/wishlist/", wishlistRouter);
+app.use("/api/size/", sizeRouter);
 
 app.use(notFound);
 app.use(globalErrhandler);
@@ -104,10 +101,9 @@ app.use(globalErrhandler);
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 
-// Socket.IO setup
 const io = new Server(server, {
   cors: {
-    origin: "*", // Replace with your frontend URL
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -115,17 +111,14 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log(`A user connected: ${socket.id}`);
 
-  // Join the room
   socket.on("joinRoom", (room) => {
     socket.join(room);
     console.log(`${socket.id} joined ${room}`);
   });
 
-  // Handle message sending
   socket.on("sendMessage", (data) => {
     console.log("Message received:", data);
 
-    // Broadcast the message to everyone in the room except the sender
     socket.to(data.room).emit("receiveMessage", data);
   });
 
