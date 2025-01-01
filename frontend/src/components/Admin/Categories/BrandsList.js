@@ -13,7 +13,6 @@ import NoDataFound from "../../NoDataFound/NoDataFound";
 export default function BrandsList() {
   const dispatch = useDispatch();
 
-  // Fetch brands on component load
   useEffect(() => {
     dispatch(fetchBrandsAction());
   }, [dispatch]);
@@ -24,7 +23,6 @@ export default function BrandsList() {
     error,
   } = useSelector((state) => state?.brands);
 
-  // Handle delete action with SweetAlert2
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are You Sure, You want to Delete it?",
@@ -37,8 +35,8 @@ export default function BrandsList() {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteBrandsAction(id)).then(() => {
-          // Optionally re-fetch brands after deletion
           dispatch(fetchBrandsAction());
+          window.location.reload();
         });
 
         Swal.fire("Deleted!", "The brand has been deleted.", "success");

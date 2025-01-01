@@ -13,12 +13,12 @@ const ErrorMsg = ({ message }) => {
         title: "Oops...",
         text: message,
       }).then(() => {
-        dispatch(resetErrAction()); // Reset error state after the alert is acknowledged
+        dispatch(resetErrAction());
       });
     }
   }, [message, dispatch]);
 
-  return null; // This component does not need to render anything visually
+  return null;
 };
 
 export default ErrorMsg;

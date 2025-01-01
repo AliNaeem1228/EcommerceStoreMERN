@@ -6,7 +6,6 @@ import {
 } from "../globalActions/globalActions";
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
 
-//initalsState
 const initialState = {
   colors: [],
   color: {},
@@ -17,19 +16,16 @@ const initialState = {
   isDelete: false,
 };
 
-//create color action
 export const createColorAction = createAsyncThunk(
   "color/create",
   async (name, { rejectWithValue, getState, dispatch }) => {
     try {
-      //Token - Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      //Images
       const { data } = await axios.post(
         `${baseURL}/colors`,
         {
@@ -44,7 +40,6 @@ export const createColorAction = createAsyncThunk(
   }
 );
 
-//fetch colors action
 export const fetchColorsAction = createAsyncThunk(
   "colors/fetch-all",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -75,12 +70,10 @@ export const deleteColorsAction = createAsyncThunk(
   }
 );
 
-//slice
 const colorsSlice = createSlice({
   name: "colors",
   initialState,
   extraReducers: (builder) => {
-    //create
     builder.addCase(createColorAction.pending, (state) => {
       state.loading = true;
     });
@@ -96,7 +89,6 @@ const colorsSlice = createSlice({
       state.error = action.payload;
     });
 
-    //fetch all
     builder.addCase(fetchColorsAction.pending, (state) => {
       state.loading = true;
     });
@@ -111,17 +103,14 @@ const colorsSlice = createSlice({
       state.isAdded = false;
       state.error = action.payload;
     });
-    //reset error action
     builder.addCase(resetErrAction.pending, (state, action) => {
       state.isAdded = false;
       state.error = null;
     });
-    //reset success action
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
       state.error = null;
     });
-    //delete
     builder.addCase(deleteColorsAction.pending, (state) => {
       state.loading = true;
       state.error = null;

@@ -66,12 +66,10 @@ export default function Product() {
     const userId = userInfo?._id;
 
     if (userId) {
-      // Ensure the wishlist is loaded from Redux or fetch it from the backend
       if (!wishlist.length) {
         dispatch(getWishlistAction({ userId }));
       }
 
-      // Check if the product is in the wishlist
       const wishlistItem = wishlist.find(
         (item) =>
           item.product === product?._id || item.product?._id === product?._id
@@ -167,7 +165,7 @@ export default function Product() {
         price: product?.price,
         description: product?.description,
         color: selectedColor,
-        size: selectedSize || null, // Pass null if size isn't selected
+        size: selectedSize || null,
         image: product?.images[0],
         totalPrice: product?.price,
         qtyLeft: product?.qtyLeft,
@@ -232,7 +230,7 @@ export default function Product() {
     }
   };
 
-  const [activeImageIndex, setActiveImageIndex] = useState(0); // For active slider image
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const nextImage = () => {
     setActiveImageIndex((prevIndex) =>
@@ -251,8 +249,8 @@ export default function Product() {
   };
 
   useEffect(() => {
-    const interval = setInterval(nextImage, 3000); // Auto-slide every 3 seconds
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    const interval = setInterval(nextImage, 3000);
+    return () => clearInterval(interval);
   }, [product?.images, activeImageIndex]);
 
   return (
@@ -296,9 +294,7 @@ export default function Product() {
                   <a
                     href="#"
                     className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    {/* {productDetails?.product?.totalReviews} Total Reviews */}
-                  </a>
+                  ></a>
                 </div>
               </div>
 
@@ -316,7 +312,6 @@ export default function Product() {
             <h2 className="sr-only">Images</h2>
 
             <div className="relative w-full max-w-2xl mx-auto">
-              {/* Slider Section */}
               <div className="w-full h-[650px] overflow-hidden bg-gray-200 rounded-lg flex items-center justify-center">
                 {product?.images?.map((image, index) => (
                   <img
@@ -331,7 +326,6 @@ export default function Product() {
                 ))}
               </div>
 
-              {/* Navigation Buttons */}
               <button
                 onClick={prevImage}
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-gray-800"
@@ -347,7 +341,6 @@ export default function Product() {
                 &#8594;
               </button>
 
-              {/* Thumbnails Section */}
               <div className="flex justify-center mt-6 space-x-4">
                 {product?.images?.map((image, index) => (
                   <div

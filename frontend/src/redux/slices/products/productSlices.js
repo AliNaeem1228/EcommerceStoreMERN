@@ -7,7 +7,6 @@ import {
 } from "../globalActions/globalActions";
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
 
-//initalsState
 const initialState = {
   products: [],
   product: {},
@@ -18,7 +17,6 @@ const initialState = {
   isDelete: false,
 };
 
-//create product action
 export const createProductAction = createAsyncThunk(
   "product/create",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -42,7 +40,6 @@ export const createProductAction = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       };
-      //FormData
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
@@ -75,7 +72,6 @@ export const createProductAction = createAsyncThunk(
   }
 );
 
-//create product action
 export const updateProductAction = createAsyncThunk(
   "product/update",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -120,7 +116,6 @@ export const updateProductAction = createAsyncThunk(
   }
 );
 
-//fetch products action
 export const fetchProductsAction = createAsyncThunk(
   "product/list",
   async ({ url }, { rejectWithValue, getState, dispatch }) => {
@@ -141,7 +136,6 @@ export const fetchProductsAction = createAsyncThunk(
   }
 );
 
-//fetch product action
 export const fetchProductAction = createAsyncThunk(
   "product/details",
   async (productId, { rejectWithValue, getState, dispatch }) => {
@@ -164,7 +158,6 @@ export const fetchProductAction = createAsyncThunk(
   }
 );
 
-//delete product action
 export const deleteProductAction = createAsyncThunk(
   "products/delete",
   async (id, { rejectWithValue, getState }) => {
@@ -187,12 +180,10 @@ export const deleteProductAction = createAsyncThunk(
   }
 );
 
-//slice
 const productSlice = createSlice({
   name: "products",
   initialState,
   extraReducers: (builder) => {
-    //create
     builder.addCase(createProductAction.pending, (state) => {
       state.loading = true;
     });
@@ -207,7 +198,6 @@ const productSlice = createSlice({
       state.isAdded = false;
       state.error = action.payload;
     });
-    //update
     builder.addCase(updateProductAction.pending, (state) => {
       state.loading = true;
     });
@@ -222,7 +212,6 @@ const productSlice = createSlice({
       state.isUpdated = false;
       state.error = action.payload;
     });
-    //fetch all
     builder.addCase(fetchProductsAction.pending, (state) => {
       state.loading = true;
     });
@@ -237,7 +226,6 @@ const productSlice = createSlice({
       state.isAdded = false;
       state.error = action.payload;
     });
-    //fetch all
     builder.addCase(fetchProductAction.pending, (state) => {
       state.loading = true;
     });
@@ -252,15 +240,12 @@ const productSlice = createSlice({
       state.isAdded = false;
       state.error = action.payload;
     });
-    //reset error
     builder.addCase(resetErrAction.pending, (state, action) => {
       state.error = null;
     });
-    //reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
     });
-    // Delete Product
     builder.addCase(deleteProductAction.pending, (state) => {
       state.loading = true;
     });
@@ -275,7 +260,6 @@ const productSlice = createSlice({
   },
 });
 
-//generate the reducer
 const productReducer = productSlice.reducer;
 
 export default productReducer;

@@ -6,7 +6,6 @@ import {
 } from "../globalActions/globalActions";
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
 
-//initalsState
 const initialState = {
   reviews: [],
   review: {},
@@ -17,19 +16,17 @@ const initialState = {
   isDelete: false,
 };
 
-//create review action
 export const createReviewAction = createAsyncThunk(
   "review/create",
   async ({ rating, message, id }, { rejectWithValue, getState, dispatch }) => {
     try {
-      //Token - Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      //request
+
       const { data } = await axios.post(
         `${baseURL}/reviews/${id}`,
         {
@@ -45,12 +42,10 @@ export const createReviewAction = createAsyncThunk(
   }
 );
 
-//slice
 const reviewsSlice = createSlice({
   name: "reviews",
   initialState,
   extraReducers: (builder) => {
-    //create
     builder.addCase(createReviewAction.pending, (state) => {
       state.loading = true;
     });
@@ -66,12 +61,10 @@ const reviewsSlice = createSlice({
       state.error = action.payload;
     });
 
-    //reset error action
     builder.addCase(resetErrAction.pending, (state, action) => {
       state.isAdded = false;
       state.error = null;
     });
-    //reset success action
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
       state.error = null;
@@ -79,7 +72,6 @@ const reviewsSlice = createSlice({
   },
 });
 
-//generate the reducer
 const reviewsReducer = reviewsSlice.reducer;
 
 export default reviewsReducer;

@@ -17,15 +17,12 @@ const Chat = () => {
       return;
     }
 
-    // Join the room
     socket.emit("joinRoom", "support-room");
 
-    // Listen for messages from the server
     socket.on("receiveMessage", (data) => {
       setMessages((prev) => [...prev, data]);
     });
 
-    // Cleanup listeners
     return () => {
       socket.off("receiveMessage");
     };
@@ -40,12 +37,16 @@ const Chat = () => {
       message: newMessage,
     };
 
-    // Emit the message to the server
     socket.emit("sendMessage", messageData);
 
-    // Update local chat history
     setMessages((prev) => [...prev, messageData]);
     setNewMessage("");
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
   };
 
   if (!userId) {
@@ -87,6 +88,7 @@ const Chat = () => {
           placeholder="Type a message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <button
           className="bg-blue-500 text-white px-4 rounded-r-lg"

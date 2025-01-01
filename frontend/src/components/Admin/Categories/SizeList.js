@@ -13,14 +13,12 @@ import NoDataFound from "../../NoDataFound/NoDataFound";
 export default function SizeList() {
   const dispatch = useDispatch();
 
-  // Fetch sizes on component load
   useEffect(() => {
     dispatch(fetchSizeAction());
   }, [dispatch]);
 
   const { sizes, loading, error } = useSelector((state) => state?.size);
 
-  // Handle delete action with SweetAlert2
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are You Sure, You want to Delete it?",
@@ -33,8 +31,8 @@ export default function SizeList() {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteSizeAction(id)).then(() => {
-          // Re-fetch sizes after deletion
           dispatch(fetchSizeAction());
+          window.location.reload();
         });
 
         Swal.fire("Deleted!", "The size has been deleted.", "success");

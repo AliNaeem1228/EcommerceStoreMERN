@@ -13,7 +13,6 @@ import NoDataFound from "../../NoDataFound/NoDataFound";
 export default function ColorsList() {
   const dispatch = useDispatch();
 
-  // Fetch colors on component load
   useEffect(() => {
     dispatch(fetchColorsAction());
   }, [dispatch]);
@@ -24,7 +23,6 @@ export default function ColorsList() {
     error,
   } = useSelector((state) => state?.colors);
 
-  // Handle delete with SweetAlert2
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are You Sure, You want to Delete it?",
@@ -37,8 +35,8 @@ export default function ColorsList() {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteColorsAction(id)).then(() => {
-          // Re-fetch colors after deletion
           dispatch(fetchColorsAction());
+          window.location.reload();
         });
 
         Swal.fire("Deleted!", "The color has been deleted.", "success");

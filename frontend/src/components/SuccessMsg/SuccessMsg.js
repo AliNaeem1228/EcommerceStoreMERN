@@ -9,12 +9,12 @@ const SuccessMsg = ({ message, onClose }) => {
         title: "Good job!",
         text: message,
       }).then(() => {
-        if (onClose) onClose(); // Reset the message after alert closes
+        if (onClose) onClose();
       });
     }
   }, [message, onClose]);
 
-  return null; // No visual component
+  return null;
 };
 
 export default SuccessMsg;

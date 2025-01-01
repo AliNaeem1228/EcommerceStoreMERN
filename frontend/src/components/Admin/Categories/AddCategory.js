@@ -24,7 +24,7 @@ export default function CategoryToAdd() {
 
   const fileHandleChange = (event) => {
     const newFile = event.target.files[0];
-    setFileErr(null); // Clear previous errors
+    setFileErr(null);
 
     if (newFile?.size > 1000000) {
       return setFileErr(`${newFile?.name} is too large`);
@@ -121,7 +121,6 @@ export default function CategoryToAdd() {
               </div>
             </div>
 
-            {/* Upload Images */}
             <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
               <div className="mt-1 sm:col-span-2 sm:mt-0">
                 <div className="flex max-w-lg justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">

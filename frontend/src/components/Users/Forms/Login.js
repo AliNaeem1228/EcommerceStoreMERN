@@ -104,7 +104,6 @@ const Login = () => {
                     )}
                   </div>
                 </form>
-                {/* Forgot Password Button */}
                 <div className="mt-2">
                   <Link
                     to="/forgot-password"

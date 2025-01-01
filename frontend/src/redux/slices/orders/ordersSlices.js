@@ -16,20 +16,17 @@ const initialState = {
   stats: null,
 };
 
-//create product action
 export const placeOrderAction = createAsyncThunk(
   "order/place-order",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
       const { orderItems, shippingAddress, totalPrice } = payload;
-      //token
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      //request
       const { data } = await axios.post(
         `${baseURL}/orders`,
         {
@@ -46,7 +43,6 @@ export const placeOrderAction = createAsyncThunk(
   }
 );
 
-//fetch products action
 export const fetchOrdersAction = createAsyncThunk(
   "orders/list",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -66,7 +62,6 @@ export const fetchOrdersAction = createAsyncThunk(
   }
 );
 
-//Get orders stats
 export const OrdersStatsAction = createAsyncThunk(
   "orders/statistics",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -86,7 +81,6 @@ export const OrdersStatsAction = createAsyncThunk(
   }
 );
 
-//fetch product action
 export const fetchOderAction = createAsyncThunk(
   "orders/details",
   async (productId, { rejectWithValue, getState, dispatch }) => {
@@ -109,20 +103,17 @@ export const fetchOderAction = createAsyncThunk(
   }
 );
 
-//Update order
 export const updateOrderAction = createAsyncThunk(
   "order/update-order",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
       const { status, id } = payload;
-      //token
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      //request
       const { data } = await axios.put(
         `${baseURL}/orders/update/${id}`,
         {
@@ -137,7 +128,6 @@ export const updateOrderAction = createAsyncThunk(
   }
 );
 
-// Delete Order Action
 export const deleteOrderAction = createAsyncThunk(
   "order/delete",
   async (id, { rejectWithValue, getState }) => {
@@ -156,12 +146,10 @@ export const deleteOrderAction = createAsyncThunk(
   }
 );
 
-//slice
 const ordersSlice = createSlice({
   name: "orders",
   initialState,
   extraReducers: (builder) => {
-    //create
     builder.addCase(placeOrderAction.pending, (state) => {
       state.loading = true;
     });
@@ -176,7 +164,6 @@ const ordersSlice = createSlice({
       state.isAdded = false;
       state.error = action.payload;
     });
-    //fetch all
     builder.addCase(fetchOrdersAction.pending, (state) => {
       state.loading = true;
     });
@@ -189,7 +176,6 @@ const ordersSlice = createSlice({
       state.orders = null;
       state.error = action.payload;
     });
-    //stats
     builder.addCase(OrdersStatsAction.pending, (state) => {
       state.loading = true;
     });
@@ -202,7 +188,6 @@ const ordersSlice = createSlice({
       state.stats = null;
       state.error = action.payload;
     });
-    //stats
     builder.addCase(updateOrderAction.pending, (state) => {
       state.loading = true;
     });
@@ -215,7 +200,6 @@ const ordersSlice = createSlice({
       state.order = null;
       state.error = action.payload;
     });
-    //fetch single
     builder.addCase(fetchOderAction.pending, (state) => {
       state.loading = true;
     });
@@ -228,15 +212,12 @@ const ordersSlice = createSlice({
       state.order = null;
       state.error = action.payload;
     });
-    //reset error
     builder.addCase(resetErrAction.pending, (state, action) => {
       state.error = null;
     });
-    //reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
     });
-    // delete order
     builder.addCase(deleteOrderAction.pending, (state) => {
       state.loading = true;
     });
@@ -244,7 +225,7 @@ const ordersSlice = createSlice({
       state.loading = false;
       state.orders = state.orders.filter(
         (order) => order._id !== action.meta.arg
-      ); // Update local state by removing the deleted order
+      );
     });
     builder.addCase(deleteOrderAction.rejected, (state, action) => {
       state.loading = false;
@@ -253,7 +234,6 @@ const ordersSlice = createSlice({
   },
 });
 
-//generate the reducer
 const ordersReducer = ordersSlice.reducer;
 
 export default ordersReducer;

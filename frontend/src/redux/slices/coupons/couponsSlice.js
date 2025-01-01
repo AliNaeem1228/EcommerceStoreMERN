@@ -6,7 +6,6 @@ import {
 } from "../globalActions/globalActions";
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
 
-//initalsState
 const initialState = {
   coupons: [],
   coupon: null,
@@ -17,7 +16,6 @@ const initialState = {
   isDelete: false,
 };
 
-//create coupon action
 export const createCouponAction = createAsyncThunk(
   "coupons/create",
   async (
@@ -25,14 +23,12 @@ export const createCouponAction = createAsyncThunk(
     { rejectWithValue, getState, dispatch }
   ) => {
     try {
-      //Token - Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      //Images
       const { data } = await axios.post(
         `${baseURL}/coupons`,
         {
@@ -50,7 +46,6 @@ export const createCouponAction = createAsyncThunk(
   }
 );
 
-//create coupon action
 export const updateCouponAction = createAsyncThunk(
   "coupons/update",
   async (
@@ -59,14 +54,12 @@ export const updateCouponAction = createAsyncThunk(
   ) => {
     console.log({ code, discount, startDate, endDate, id });
     try {
-      //Token - Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      //Images
       const { data } = await axios.put(
         `${baseURL}/coupons/update/${id}`,
         {
@@ -83,7 +76,7 @@ export const updateCouponAction = createAsyncThunk(
     }
   }
 );
-//fetch coupons action
+
 export const fetchCouponsAction = createAsyncThunk(
   "coupons/fetch-All",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -95,7 +88,7 @@ export const fetchCouponsAction = createAsyncThunk(
     }
   }
 );
-//fetch coupon action
+
 export const fetchCouponAction = createAsyncThunk(
   "coupons/single",
   async (code, { rejectWithValue, getState, dispatch }) => {
@@ -110,12 +103,11 @@ export const fetchCouponAction = createAsyncThunk(
     }
   }
 );
-//Delete coupon action
+
 export const deleteCouponAction = createAsyncThunk(
   "coupons/delete",
   async (id, { rejectWithValue, getState, dispatch }) => {
     try {
-      //Token - Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
@@ -132,12 +124,10 @@ export const deleteCouponAction = createAsyncThunk(
     }
   }
 );
-//slice
 const couponsSlice = createSlice({
   name: "coupons",
   initialState,
   extraReducers: (builder) => {
-    //create
     builder.addCase(createCouponAction.pending, (state) => {
       state.loading = true;
     });
@@ -153,7 +143,6 @@ const couponsSlice = createSlice({
       state.error = action.payload;
     });
 
-    //update
     builder.addCase(updateCouponAction.pending, (state) => {
       state.loading = true;
     });
@@ -169,7 +158,6 @@ const couponsSlice = createSlice({
       state.error = action.payload;
     });
 
-    //delete
     builder.addCase(deleteCouponAction.pending, (state) => {
       state.loading = true;
     });
@@ -182,7 +170,6 @@ const couponsSlice = createSlice({
       state.error = action.payload;
     });
 
-    //fetch all
     builder.addCase(fetchCouponsAction.pending, (state) => {
       state.loading = true;
     });
@@ -197,7 +184,6 @@ const couponsSlice = createSlice({
       state.error = action.payload;
     });
 
-    //fetch single coupon
     builder.addCase(fetchCouponAction.pending, (state) => {
       state.loading = true;
     });
@@ -210,12 +196,10 @@ const couponsSlice = createSlice({
       state.coupon = null;
       state.error = action.payload;
     });
-    //reset error action
     builder.addCase(resetErrAction.pending, (state, action) => {
       state.isAdded = false;
       state.error = null;
     });
-    //reset success action
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
       state.error = null;
@@ -223,7 +207,6 @@ const couponsSlice = createSlice({
   },
 });
 
-//generate the reducer
 const couponsReducer = couponsSlice.reducer;
 
 export default couponsReducer;

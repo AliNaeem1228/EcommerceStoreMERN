@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseURL from "../../../utils/baseURL";
 
-// Initial state
 const initialState = {
   wishlist: [],
   loading: false,
@@ -11,7 +10,6 @@ const initialState = {
   pagination: null,
 };
 
-// Create a wishlist item
 export const createWishlistAction = createAsyncThunk(
   "wishlist/create",
   async ({ userId, productId }, { rejectWithValue }) => {
@@ -20,7 +18,7 @@ export const createWishlistAction = createAsyncThunk(
         user: userId,
         product: productId,
       });
-      return data.wishlist; // Return the created wishlist item
+      return data.wishlist;
     } catch (error) {
       return rejectWithValue(
         error?.response?.data?.message || "Error creating wishlist item"
@@ -29,7 +27,6 @@ export const createWishlistAction = createAsyncThunk(
   }
 );
 
-// Fetch wishlist items for a user with pagination
 export const getWishlistAction = createAsyncThunk(
   "wishlist/get",
   async ({ userId, page = 1, limit = 10 }, { rejectWithValue }) => {
@@ -50,7 +47,6 @@ export const getWishlistAction = createAsyncThunk(
   }
 );
 
-// Delete a wishlist item
 export const deleteWishlistAction = createAsyncThunk(
   "wishlist/delete",
   async (wishlistId, { rejectWithValue }) => {
@@ -58,7 +54,7 @@ export const deleteWishlistAction = createAsyncThunk(
       const { data } = await axios.delete(
         `${baseURL}/wishlist/${wishlistId}/delete`
       );
-      return data.wishlist; // Return the deleted wishlist item
+      return data.wishlist;
     } catch (error) {
       return rejectWithValue(
         error?.response?.data?.message || "Error deleting wishlist item"
@@ -67,12 +63,10 @@ export const deleteWishlistAction = createAsyncThunk(
   }
 );
 
-// Wishlist slice
 const wishlistSlice = createSlice({
   name: "wishlist",
   initialState,
   extraReducers: (builder) => {
-    // Create wishlist
     builder.addCase(createWishlistAction.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -80,29 +74,27 @@ const wishlistSlice = createSlice({
     builder.addCase(createWishlistAction.fulfilled, (state, action) => {
       state.loading = false;
       state.success = true;
-      state.wishlist.push(action.payload); // Add the created wishlist item to the state
+      state.wishlist.push(action.payload);
     });
     builder.addCase(createWishlistAction.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
 
-    // Get wishlist
     builder.addCase(getWishlistAction.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
     builder.addCase(getWishlistAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.wishlist = action.payload.wishlist; // Replace the wishlist with fetched items
-      state.pagination = action.payload.pagination; // Store pagination details
+      state.wishlist = action.payload.wishlist;
+      state.pagination = action.payload.pagination;
     });
     builder.addCase(getWishlistAction.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
 
-    // Delete wishlist
     builder.addCase(deleteWishlistAction.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -112,7 +104,7 @@ const wishlistSlice = createSlice({
       state.success = true;
       state.wishlist = state.wishlist.filter(
         (item) => item._id !== action.payload._id
-      ); // Remove the deleted item from the state
+      );
     });
     builder.addCase(deleteWishlistAction.rejected, (state, action) => {
       state.loading = false;
@@ -121,7 +113,6 @@ const wishlistSlice = createSlice({
   },
 });
 
-// Generate reducer
 const wishlistReducer = wishlistSlice.reducer;
 
 export default wishlistReducer;

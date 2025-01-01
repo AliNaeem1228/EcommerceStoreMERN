@@ -7,7 +7,6 @@ import {
 } from "../globalActions/globalActions";
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
 
-//initalsState
 const initialState = {
   categories: [],
   category: {},
@@ -18,25 +17,21 @@ const initialState = {
   isDelete: false,
 };
 
-//create Category action
 export const createCategoryAction = createAsyncThunk(
   "category/create",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     console.log(payload);
     try {
       const { name, file } = payload;
-      //fromData
       const formData = new FormData();
       formData.append("name", name);
       formData.append("file", file);
-      //Token - Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      //Images
       const { data } = await axios.post(
         `${baseURL}/categories`,
         formData,
@@ -49,7 +44,6 @@ export const createCategoryAction = createAsyncThunk(
   }
 );
 
-//fetch Categories action
 export const fetchCategoriesAction = createAsyncThunk(
   "category/fetch All",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -62,7 +56,6 @@ export const fetchCategoriesAction = createAsyncThunk(
   }
 );
 
-// Update Category Action
 export const updateCategoriesAction = createAsyncThunk(
   "categories/update",
   async ({ id, name }, { rejectWithValue, getState }) => {
@@ -86,7 +79,6 @@ export const updateCategoriesAction = createAsyncThunk(
   }
 );
 
-// Delete Category Action
 export const deleteCategoriesAction = createAsyncThunk(
   "categories/delete",
   async (id, { rejectWithValue, getState }) => {
@@ -109,12 +101,10 @@ export const deleteCategoriesAction = createAsyncThunk(
   }
 );
 
-//slice
 const categorySlice = createSlice({
   name: "categories",
   initialState,
   extraReducers: (builder) => {
-    //create
     builder.addCase(createCategoryAction.pending, (state) => {
       state.loading = true;
     });
@@ -130,7 +120,6 @@ const categorySlice = createSlice({
       state.error = action.payload;
     });
 
-    //fetch all
     builder.addCase(fetchCategoriesAction.pending, (state) => {
       state.loading = true;
     });
@@ -143,15 +132,12 @@ const categorySlice = createSlice({
       state.categories = null;
       state.error = action.payload;
     });
-    //Reset err
     builder.addCase(resetErrAction.pending, (state, action) => {
       state.error = null;
     });
-    //Reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
     });
-    // Update Category
     builder.addCase(updateCategoriesAction.pending, (state) => {
       state.loading = true;
     });
@@ -164,7 +150,6 @@ const categorySlice = createSlice({
       state.error = action.payload;
     });
 
-    // Delete Category
     builder.addCase(deleteCategoriesAction.pending, (state) => {
       state.loading = true;
     });
@@ -179,7 +164,6 @@ const categorySlice = createSlice({
   },
 });
 
-//generate the reducer
 const categoryReducer = categorySlice.reducer;
 
 export default categoryReducer;

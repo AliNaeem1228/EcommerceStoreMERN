@@ -4,7 +4,6 @@ import axios from "axios";
 import baseURL from "../../../utils/baseURL";
 import { resetErrAction } from "../globalActions/globalActions";
 
-//initialState
 const initialState = {
   loading: false,
   error: null,
@@ -28,7 +27,6 @@ const initialState = {
   resetPasswordError: null,
 };
 
-//register action
 export const registerUserAction = createAsyncThunk(
   "users/register",
   async (
@@ -36,7 +34,6 @@ export const registerUserAction = createAsyncThunk(
     { rejectWithValue, getState, dispatch }
   ) => {
     try {
-      //make the http request
       const { data } = await axios.post(`${baseURL}/users/register`, {
         email,
         password,
@@ -50,7 +47,6 @@ export const registerUserAction = createAsyncThunk(
   }
 );
 
-//update user shipping address action
 export const updateUserShippingAddressAction = createAsyncThunk(
   "users/update-shipping-address",
   async (
@@ -105,12 +101,10 @@ export const updateUserShippingAddressAction = createAsyncThunk(
   }
 );
 
-//user profile action
 export const getUserProfileAction = createAsyncThunk(
   "users/profile-fetched",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
-      //get token
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
@@ -126,7 +120,6 @@ export const getUserProfileAction = createAsyncThunk(
   }
 );
 
-//login action
 export const loginUserAction = createAsyncThunk(
   "users/login",
   async ({ email, password }, { rejectWithValue }) => {
@@ -145,7 +138,6 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
-//Verify OTP
 export const verifyOtpAction = createAsyncThunk(
   "users/verify-otp",
   async ({ _id, otp }, { rejectWithValue }) => {
@@ -167,18 +159,15 @@ export const verifyOtpAction = createAsyncThunk(
   }
 );
 
-//logout action
 export const logoutAction = createAsyncThunk(
   "users/logout",
   async (payload, { rejectWithValue, getState, dispatch }) => {
-    //get token
     localStorage.removeItem("userInfo");
     localStorage.removeItem("cartItems");
     return true;
   }
 );
 
-//Send OTP
 export const sendOtpAction = createAsyncThunk(
   "users/send-otp",
   async (_id, { rejectWithValue }) => {
@@ -195,7 +184,6 @@ export const sendOtpAction = createAsyncThunk(
   }
 );
 
-//Forgot Password
 export const forgotPasswordAction = createAsyncThunk(
   "users/forgot-password",
   async (email, { rejectWithValue }) => {
@@ -212,7 +200,6 @@ export const forgotPasswordAction = createAsyncThunk(
   }
 );
 
-//Reset Password
 export const resetPasswordAction = createAsyncThunk(
   "users/reset-password",
   async ({ _id, password }, { rejectWithValue }) => {
@@ -231,13 +218,10 @@ export const resetPasswordAction = createAsyncThunk(
   }
 );
 
-//users slice
 const usersSlice = createSlice({
   name: "users",
   initialState,
   extraReducers: (builder) => {
-    //handle actions
-    //login
     builder.addCase(loginUserAction.pending, (state, action) => {
       state.userAuth.loading = true;
     });
@@ -249,7 +233,6 @@ const usersSlice = createSlice({
       state.userAuth.error = action.payload;
       state.userAuth.loading = false;
     });
-    //register
     builder.addCase(registerUserAction.pending, (state, action) => {
       state.loading = true;
     });
@@ -261,11 +244,9 @@ const usersSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     });
-    //logout
     builder.addCase(logoutAction.fulfilled, (state, action) => {
       state.userAuth.userInfo = null;
     });
-    //profile
     builder.addCase(getUserProfileAction.pending, (state, action) => {
       state.loading = true;
     });
@@ -277,7 +258,6 @@ const usersSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     });
-    //shipping address
     builder.addCase(
       updateUserShippingAddressAction.pending,
       (state, action) => {
@@ -298,11 +278,10 @@ const usersSlice = createSlice({
         state.loading = false;
       }
     );
-    //reset error action
     builder.addCase(resetErrAction.pending, (state) => {
       state.error = null;
     });
-    //send OTP
+
     builder.addCase(sendOtpAction.pending, (state, action) => {
       state.loading = true;
       state.error = null;
@@ -319,7 +298,6 @@ const usersSlice = createSlice({
       state.error = action.payload;
     });
 
-    //verify OTP
     builder.addCase(verifyOtpAction.pending, (state, action) => {
       state.loading = true;
       state.error = null;
@@ -364,7 +342,6 @@ const usersSlice = createSlice({
   },
 });
 
-//generate reducer
 const usersReducer = usersSlice.reducer;
 
 export default usersReducer;

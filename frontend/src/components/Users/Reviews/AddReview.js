@@ -11,11 +11,11 @@ import { StarIcon as OutlineStarIcon } from "@heroicons/react/24/outline";
 
 export default function AddReview() {
   const dispatch = useDispatch();
-  const { id } = useParams(); // Get the product ID from the URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    rating: 0, // Default rating set to 0
+    rating: 0,
     message: "",
   });
 
@@ -45,11 +45,10 @@ export default function AddReview() {
 
   useEffect(() => {
     if (isAdded) {
-      // Reset success state after a brief timeout
       setTimeout(() => {
         dispatch(resetSuccessAction());
-        navigate(`/products/${id}`); // Navigate back to the product page
-      }, 2000); // 2-second delay
+        navigate(`/products/${id}`);
+      }, 2000);
     }
   }, [isAdded, dispatch, navigate, id]);
 

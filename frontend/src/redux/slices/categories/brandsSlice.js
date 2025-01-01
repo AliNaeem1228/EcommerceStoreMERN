@@ -2,7 +2,6 @@ import axios from "axios";
 import baseURL from "../../../utils/baseURL";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-// Initial State
 const initialState = {
   brands: [],
   brand: {},
@@ -13,7 +12,6 @@ const initialState = {
   isDeleted: false,
 };
 
-// Create Brand Action
 export const createBrandAction = createAsyncThunk(
   "brand/create",
   async (name, { rejectWithValue, getState }) => {
@@ -30,7 +28,6 @@ export const createBrandAction = createAsyncThunk(
   }
 );
 
-// Fetch All Brands Action
 export const fetchBrandsAction = createAsyncThunk(
   "brands/fetchAll",
   async (_, { rejectWithValue }) => {
@@ -43,7 +40,6 @@ export const fetchBrandsAction = createAsyncThunk(
   }
 );
 
-// Delete Brand Action
 export const deleteBrandsAction = createAsyncThunk(
   "brands/delete",
   async (id, { rejectWithValue, getState }) => {
@@ -60,7 +56,6 @@ export const deleteBrandsAction = createAsyncThunk(
   }
 );
 
-// Slice
 const brandsSlice = createSlice({
   name: "brands",
   initialState,
@@ -73,7 +68,6 @@ const brandsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Create Brand
     builder.addCase(createBrandAction.pending, (state) => {
       state.loading = true;
     });
@@ -87,7 +81,6 @@ const brandsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // Fetch All Brands
     builder.addCase(fetchBrandsAction.pending, (state) => {
       state.loading = true;
     });
@@ -100,7 +93,6 @@ const brandsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // Delete Brand
     builder.addCase(deleteBrandsAction.pending, (state) => {
       state.loading = true;
     });
@@ -118,6 +110,5 @@ const brandsSlice = createSlice({
   },
 });
 
-// Export Reducer and Actions
 export const { resetBrandState } = brandsSlice.actions;
 export default brandsSlice.reducer;

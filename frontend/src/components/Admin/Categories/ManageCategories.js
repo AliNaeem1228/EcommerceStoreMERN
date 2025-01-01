@@ -14,7 +14,6 @@ import NoDataFound from "../../NoDataFound/NoDataFound";
 export default function ManageCategories() {
   const dispatch = useDispatch();
 
-  // Fetch categories on component load
   useEffect(() => {
     dispatch(fetchCategoriesAction());
   }, [dispatch]);
@@ -25,7 +24,6 @@ export default function ManageCategories() {
     error,
   } = useSelector((state) => state?.categories);
 
-  // Handle delete with SweetAlert2
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are You Sure, You want to Delete this category?",

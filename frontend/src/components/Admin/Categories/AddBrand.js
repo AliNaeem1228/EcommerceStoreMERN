@@ -25,16 +25,14 @@ export default function AddBrand() {
 
   const { error, loading, isAdded } = useSelector((state) => state?.brands);
 
-  // Reset state after showing success/error messages
   useEffect(() => {
     if (isAdded || error) {
       setTimeout(() => {
         dispatch(resetBrandState());
-      }, 100); // Ensure modal visibility before resetting
+      }, 100);
     }
   }, [isAdded, error, dispatch]);
 
-  // Debug Redux state changes (optional, for troubleshooting)
   useEffect(() => {
     console.log("Redux State - isAdded:", isAdded);
     console.log("Redux State - error:", error);

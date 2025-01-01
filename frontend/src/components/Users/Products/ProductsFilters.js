@@ -59,19 +59,17 @@ function classNames(...classes) {
 }
 
 export default function ProductsFilters() {
-  //dispatch
   const dispatch = useDispatch();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  //get query string
   const [params, setParams] = useSearchParams();
   const category = params.get("category");
-  //filters
+
   const [color, setColor] = useState("");
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
   console.log(color);
-  //build up url
+
   let productUrl = `${baseURL}/products`;
   if (category) {
     productUrl = `${baseURL}/products?category=${category}`;
@@ -85,7 +83,7 @@ export default function ProductsFilters() {
   if (color) {
     productUrl = `${productUrl}&color=${color?.name}`;
   }
-  //fetch all products
+
   useEffect(() => {
     dispatch(
       fetchProductsAction({
@@ -93,14 +91,13 @@ export default function ProductsFilters() {
       })
     );
   }, [dispatch, category, brand, price, color]);
-  //get store data
+
   const {
     products: { products },
     loading,
     error,
   } = useSelector((state) => state?.products);
 
-  //fetch brands
   useEffect(() => {
     dispatch(
       fetchBrandsAction({
@@ -108,12 +105,11 @@ export default function ProductsFilters() {
       })
     );
   }, [dispatch]);
-  //get store data
+
   const {
     brands: { brands },
   } = useSelector((state) => state?.brands);
 
-  //fetch colors
   useEffect(() => {
     dispatch(
       fetchColorsAction({
@@ -122,7 +118,6 @@ export default function ProductsFilters() {
     );
   }, [dispatch]);
 
-  //get store data
   const {
     colors: { colors },
   } = useSelector((state) => state?.colors);
@@ -136,7 +131,6 @@ export default function ProductsFilters() {
   return (
     <div className="bg-white">
       <div>
-        {/* Mobile menu */}
         <Transition.Root show={mobileMenuOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -184,7 +178,6 @@ export default function ProductsFilters() {
       </div>
 
       <div>
-        {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -228,7 +221,6 @@ export default function ProductsFilters() {
                     </button>
                   </div>
 
-                  {/* Mobile Filters */}
                   <form className="mt-4 border-t border-gray-200">
                     {/*  */}
                     <Disclosure
@@ -301,7 +293,6 @@ export default function ProductsFilters() {
                       )}
                     </Disclosure>
 
-                    {/* price categories section */}
                     <Disclosure
                       as="div"
                       key="disclosure"
@@ -352,9 +343,7 @@ export default function ProductsFilters() {
                         </>
                       )}
                     </Disclosure>
-                    {/*  end price categories section  */}
 
-                    {/* product brand categories section categories section */}
                     <Disclosure
                       as="div"
                       key="disclosure"
@@ -405,9 +394,7 @@ export default function ProductsFilters() {
                         </>
                       )}
                     </Disclosure>
-                    {/*  end product brand categories section */}
                   </form>
-                  {/* end of mobile filters */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -419,20 +406,8 @@ export default function ProductsFilters() {
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">
               Product Filters
             </h1>
-            {/* sort */}
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
-                {/* <div>
-                  <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Sort
-                    <ChevronDownIcon
-                      className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                  </Menu.Button>
-                </div> */}
-
-                {/* sort item links */}
                 <Transition
                   as={Fragment}
                   enter="transition ease-out duration-100"
@@ -484,11 +459,9 @@ export default function ProductsFilters() {
             </h2>
 
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-              {/* Desktop  Filters */}
               <form className="hidden lg:block">
                 <h3 className="sr-only">Categories</h3>
 
-                {/* colors categories Desktop section */}
                 <Disclosure
                   as="div"
                   key="disclosure"
@@ -519,7 +492,6 @@ export default function ProductsFilters() {
 
                       <Disclosure.Panel className="pt-6">
                         <div className="space-y-6">
-                          {/* Any Color */}
                           {colorsLoading ? (
                             <h2>Loading...</h2>
                           ) : colorsError ? (
@@ -556,9 +528,7 @@ export default function ProductsFilters() {
                     </>
                   )}
                 </Disclosure>
-                {/* colors end categories section */}
 
-                {/* price categories section Desktop*/}
                 <Disclosure
                   as="div"
                   key="disclosure"
@@ -606,9 +576,7 @@ export default function ProductsFilters() {
                     </>
                   )}
                 </Disclosure>
-                {/*  end price categories section  Desktop*/}
 
-                {/* product brand categories section categories section */}
                 <Disclosure
                   as="div"
                   key="disclosure"
@@ -656,9 +624,7 @@ export default function ProductsFilters() {
                     </>
                   )}
                 </Disclosure>
-                {/*  end product brand categories section */}
               </form>
-              {/* Product grid */}
               {loading ? (
                 <LoadingComponent />
               ) : error ? (

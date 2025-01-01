@@ -6,7 +6,6 @@ import {
 import baseURL from "../../../utils/baseURL";
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
 
-// Initial State
 const initialState = {
   sizes: [],
   size: {},
@@ -17,7 +16,6 @@ const initialState = {
   isDeleted: false,
 };
 
-// Create Size Action
 export const createSizeAction = createAsyncThunk(
   "size/create",
   async (name, { rejectWithValue, getState }) => {
@@ -36,7 +34,6 @@ export const createSizeAction = createAsyncThunk(
   }
 );
 
-// Fetch All Sizes Action
 export const fetchSizeAction = createAsyncThunk(
   "size/fetch-all",
   async (_, { rejectWithValue }) => {
@@ -49,7 +46,6 @@ export const fetchSizeAction = createAsyncThunk(
   }
 );
 
-// Update Size Action
 export const updateSizeAction = createAsyncThunk(
   "size/update",
   async ({ id, name }, { rejectWithValue, getState }) => {
@@ -72,7 +68,6 @@ export const updateSizeAction = createAsyncThunk(
   }
 );
 
-// Delete Size Action
 export const deleteSizeAction = createAsyncThunk(
   "size/delete",
   async (id, { rejectWithValue, getState }) => {
@@ -91,12 +86,10 @@ export const deleteSizeAction = createAsyncThunk(
   }
 );
 
-// Size Slice
 const sizeSlice = createSlice({
   name: "size",
   initialState,
   extraReducers: (builder) => {
-    // Create Size
     builder.addCase(createSizeAction.pending, (state) => {
       state.loading = true;
     });
@@ -110,7 +103,6 @@ const sizeSlice = createSlice({
       state.error = action.payload;
     });
 
-    // Fetch All Sizes
     builder.addCase(fetchSizeAction.pending, (state) => {
       state.loading = true;
     });
@@ -123,7 +115,6 @@ const sizeSlice = createSlice({
       state.error = action.payload;
     });
 
-    // Update Size
     builder.addCase(updateSizeAction.pending, (state) => {
       state.loading = true;
     });
@@ -137,7 +128,6 @@ const sizeSlice = createSlice({
       state.error = action.payload;
     });
 
-    // Delete Size
     builder.addCase(deleteSizeAction.pending, (state) => {
       state.loading = true;
     });
@@ -150,12 +140,10 @@ const sizeSlice = createSlice({
       state.error = action.payload;
     });
 
-    // Reset Error Action
     builder.addCase(resetErrAction.pending, (state) => {
       state.error = null;
     });
 
-    // Reset Success Action
     builder.addCase(resetSuccessAction.pending, (state) => {
       state.isAdded = false;
       state.isUpdated = false;
@@ -165,7 +153,6 @@ const sizeSlice = createSlice({
   },
 });
 
-// Generate the Reducer
 const sizeReducer = sizeSlice.reducer;
 
 export default sizeReducer;

@@ -31,7 +31,6 @@ export default function AddColor() {
 
   useEffect(() => {
     if (isAdded) {
-      // Show success message
       import("sweetalert2").then((Swal) =>
         Swal.default.fire({
           icon: "success",
@@ -39,12 +38,10 @@ export default function AddColor() {
           text: "Color Created Successfully",
         })
       );
-      // Reset success state
       dispatch(resetSuccessAction());
     }
 
     if (error) {
-      // Show error message
       import("sweetalert2").then((Swal) =>
         Swal.default.fire({
           icon: "error",
@@ -52,7 +49,6 @@ export default function AddColor() {
           text: error.message || "Something went wrong",
         })
       );
-      // Reset error state
       dispatch(resetErrAction());
     }
   }, [isAdded, error, dispatch]);

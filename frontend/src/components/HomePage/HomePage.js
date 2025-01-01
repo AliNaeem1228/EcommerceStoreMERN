@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HomeCategories from "./HomeCategories";
 import HomeProductTrending from "./HomeProductTrending";
 
@@ -51,6 +51,11 @@ const perks = [
   },
 ];
 export default function Example() {
+  const navigate = useNavigate();
+
+  const handleShopNow = () => {
+    navigate("/products-filters");
+  };
   return (
     <div className="bg-white">
       <main>
@@ -94,12 +99,13 @@ export default function Example() {
                       New products are added every week. Check back often to see
                     </p>
                     <div className="mt-6">
-                      <a
+                      <button
                         href="#"
                         className="inline-block rounded-md border border-transparent bg-indigo-600 py-3 px-8 font-medium text-white hover:bg-indigo-700"
+                        onClick={handleShopNow}
                       >
-                        Shop Productivity
-                      </a>
+                        Shop Now
+                      </button>
                     </div>
                   </div>
                 </div>

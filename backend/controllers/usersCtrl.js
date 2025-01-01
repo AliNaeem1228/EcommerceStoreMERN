@@ -174,7 +174,7 @@ export const sendOtp = async (req, res) => {
     await sendMail(
       existingUser.email,
       `OTP Verification for Your Account`,
-      `Your One-Time Password (OTP) for account verification is: <b>${otp}</b>.</br>Do not share this OTP with anyone for security reasons`
+      `Your One-Time Password (OTP) for account verification is: <b>${otp}</b></br>Do not share this OTP with anyone`
     );
 
     res.status(201).json({ message: "OTP sent" });
@@ -219,7 +219,7 @@ export const forgotPassword = async (req, res) => {
         
         <p><a href=${process.env.FRONTEND}/reset-password/${isExistingUser._id}/${passwordResetToken} target="_blank">Reset Password</a></p>
         
-        <p>This link is valid for a limited time. If you did not request a password reset, please ignore this email. Your account security is important to us.
+        <p>This link is valid for a limited time. If you did not request a password reset, please ignore this email.
         
         Thank you,
         </p>`

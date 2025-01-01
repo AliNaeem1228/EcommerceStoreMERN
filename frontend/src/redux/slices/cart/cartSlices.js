@@ -9,19 +9,18 @@ const initialState = {
   isDelete: false,
 };
 
-//add product to cart
 export const addOrderToCartaction = createAsyncThunk(
   "cart/add-to-cart",
   async (cartItem) => {
     const cartItems = localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems"))
       : [];
-    //push to storage
+
     cartItems.push(cartItem);
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }
 );
-//fetch product to cart
+
 export const getCartItemsFromLocalStorageAction = createAsyncThunk(
   "cart/get-order-items",
   async () => {
@@ -33,7 +32,6 @@ export const getCartItemsFromLocalStorageAction = createAsyncThunk(
   }
 );
 
-//fetch order quantity product to cart
 export const changeOrderItemQty = createAsyncThunk(
   "cart/change-item-qty",
   async ({ productId, qty }) => {
@@ -43,7 +41,6 @@ export const changeOrderItemQty = createAsyncThunk(
       : [];
     const newCartItems = cartItems?.map((item) => {
       if (item?._id?.toString() === productId?.toString()) {
-        //get new price
         const newPrice = item?.price * qty;
         item.qty = +qty;
         item.totalPrice = newPrice;
@@ -54,7 +51,6 @@ export const changeOrderItemQty = createAsyncThunk(
   }
 );
 
-//remove from cart
 export const removeOrderItemQty = createAsyncThunk(
   "cart/removeOrderItem",
   async (productId) => {
@@ -66,18 +62,15 @@ export const removeOrderItemQty = createAsyncThunk(
   }
 );
 
-//clear cart
 export const clearCart = createAsyncThunk("cart/clearAll", async () => {
   const cartItems = localStorage.removeItem("cartItems");
   return cartItems;
 });
 
-//slice
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   extraReducers: (builder) => {
-    //add to cart
     builder.addCase(addOrderToCartaction.pending, (state) => {
       state.loading = true;
     });
@@ -92,7 +85,6 @@ const cartSlice = createSlice({
       state.isAdded = false;
       state.error = action.payload;
     });
-    //fetch cart items
     builder.addCase(getCartItemsFromLocalStorageAction.pending, (state) => {
       state.loading = true;
     });
@@ -119,7 +111,6 @@ const cartSlice = createSlice({
   },
 });
 
-//generate the reducer
 const cartReducer = cartSlice.reducer;
 
 export default cartReducer;

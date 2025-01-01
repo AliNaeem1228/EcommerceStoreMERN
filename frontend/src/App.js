@@ -38,7 +38,7 @@ import Wishlist from "./components/Users/Products/Wishlist";
 import AddSize from "./components/Admin/Categories/AddSize";
 import SizeList from "./components/Admin/Categories/SizeList";
 import Chat from "./components/Chat/Chat";
-import AddressChangeForm from "./components/Users/Profile/AddressChangeForm";
+import AddressChangeForm from "./components/Users/Forms/AddressChangeForm";
 import ForgotPassword from "./components/Users/Forms/ForgotPassword";
 import ResetPassword from "./components/Users/Forms/ResetPassword";
 

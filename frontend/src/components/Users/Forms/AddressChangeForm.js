@@ -17,13 +17,11 @@ const AddressChangeForm = () => {
     country: "",
   });
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userAuth?.userInfo?.token) {
@@ -42,6 +40,7 @@ const AddressChangeForm = () => {
         title: "Success",
         text: "Shipping address updated successfully.",
       });
+      window.history.back();
     } catch (error) {
       Swal.fire({
         icon: "error",
